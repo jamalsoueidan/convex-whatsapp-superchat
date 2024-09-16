@@ -1,0 +1,27 @@
+.tiptap {
+  :first-child {
+    margin-top: 0;
+  }
+
+  .mention {
+    background-color: var(--mantine-color-gray-3);
+    border-radius: 0.4rem;
+    box-decoration-break: clone;
+    padding: 0.1rem 0.3rem;
+    color: black;
+    font-weight: 500;
+  }
+}
+
+.ProseMirror {
+  padding: 8px !important;
+  border-radius: var(--mantine-spacing-xs);
+  border: 1px solid #2d9fd9;
+  background: white;
+
+  p {
+    line-height: var(--mantine-spacing-lg);
+    margin: 0;
+    padding: 0;
+  }
+}
