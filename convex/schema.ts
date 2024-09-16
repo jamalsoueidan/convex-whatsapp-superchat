@@ -223,7 +223,7 @@ const schema = defineSchema({
               v.object({
                 rows: v.array(
                   v.object({
-                    description: v.string(),
+                    description: v.optional(v.string()),
                     id: v.string(),
                     title: v.string(),
                   })
@@ -336,7 +336,7 @@ const schema = defineSchema({
                         v.object({
                           rows: v.array(
                             v.object({
-                              description: v.string(),
+                              description: v.optional(v.string()),
                               id: v.string(),
                               title: v.string(),
                             })
