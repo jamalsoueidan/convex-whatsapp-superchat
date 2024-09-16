@@ -5,7 +5,6 @@ import {
   Divider,
   Flex,
   Group,
-  Progress,
   ScrollArea,
   Stack,
   Table,
@@ -48,12 +47,12 @@ export default function Bot() {
       <Divider />
 
       <ScrollArea.Autosize type="scroll" mah="100%" w="100%" mx="auto">
-        <Table.ScrollContainer minWidth={800}>
+        <Table.ScrollContainer minWidth={450}>
           <Table verticalSpacing="xs">
             <Table.Thead>
               <Table.Tr>
                 <Table.Th>Title</Table.Th>
-                <Table.Th>Stats</Table.Th>
+                <Table.Th>Steps</Table.Th>
                 <Table.Th ta="right">Status</Table.Th>
               </Table.Tr>
             </Table.Thead>
@@ -65,29 +64,10 @@ export default function Bot() {
                       <Anchor component={Link} to={`/bot/${bot._id}/edit`}>
                         {bot.title}
                       </Anchor>
-                      <Text size="xs">total {bot.nodes.length} steps</Text>
                     </Table.Td>
 
                     <Table.Td>
-                      <Group justify="space-between">
-                        <Text fz="xs" c="teal" fw={700}>
-                          {100}%
-                        </Text>
-                        <Text fz="xs" c="red" fw={700}>
-                          {100}%
-                        </Text>
-                      </Group>
-                      <Progress.Root>
-                        <Progress.Section value={100} color="teal" />
-                        <Progress.Section value={100} color="red" />
-                      </Progress.Root>
-                      <Anchor
-                        component={Link}
-                        to={`/${bot._id}/edit/logs?toggle=logs`}
-                        fz="sm"
-                      >
-                        View log
-                      </Anchor>
+                      <Text size="xs">total {bot.nodes.length} steps</Text>
                     </Table.Td>
 
                     <Table.Td>
