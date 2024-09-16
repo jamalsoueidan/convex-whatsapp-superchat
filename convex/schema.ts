@@ -400,6 +400,7 @@ const schema = defineSchema({
             width: v.float64(),
           })
         ),
+        selected: v.optional(v.boolean()),
         source: v.string(),
         sourceHandle: v.optional(v.string()),
         style: v.optional(v.object({ strokeWidth: v.float64() })),
