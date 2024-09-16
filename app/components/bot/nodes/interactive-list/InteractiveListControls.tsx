@@ -130,6 +130,11 @@ export function InteractiveListControls({
           {...form.getInputProps("whatsapp.interactive.footer.text")}
           label="Footer"
         />
+
+        <TextInput
+          {...form.getInputProps("whatsapp.interactive.action.button")}
+          label="Action button"
+        />
       </Stack>
       <Card.Section>
         <Divider my="lg" />
