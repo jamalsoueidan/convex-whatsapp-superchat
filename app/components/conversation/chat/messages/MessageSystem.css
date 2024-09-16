@@ -1,0 +1,7 @@
+.mention {
+  border-radius: 0.4rem;
+  box-decoration-break: clone;
+  padding: 0.1rem 0.3rem;
+  color: black;
+  font-weight: 500;
+}
