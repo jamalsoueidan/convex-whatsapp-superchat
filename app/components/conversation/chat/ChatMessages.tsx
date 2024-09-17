@@ -97,49 +97,52 @@ export function ChatMessages({
 
   return (
     <div>
-      {messages.map((msg, index) => {
-        const MessageComponent = MessageComponents[msg.type] || MessageUnknown;
+      {[...messages]
+        .sort((a, b) => b.timestamp - a.timestamp)
+        .map((msg, index) => {
+          const MessageComponent =
+            MessageComponents[msg.type] || MessageUnknown;
 
-        const showDateHeader =
-          index === 0 || hasDayChanged(msg, messages[index - 1]);
+          const showDateHeader =
+            index === 0 || hasDayChanged(msg, messages[index - 1]);
 
-        const date = dayjs(msg.timestamp * 1000).format("MM/DD/YYYY");
+          const date = dayjs(msg.timestamp * 1000).format("MM/DD/YYYY");
 
-        const isSticky = stickyStates[date];
+          const isSticky = stickyStates[date];
 
-        return (
-          <div
-            key={msg._id}
-            id={msg._id}
-            data-message-id={msg._id}
-            data-message-date={date}
-          >
-            {showDateHeader && (
-              <Flex justify="center" p="0" m="0">
-                <Card
-                  px="xs"
-                  py="2px"
-                  mt="4px"
-                  shadow="xs"
-                  radius="md"
-                  miw="80px"
-                  mih="24px"
-                  style={{
-                    position: isSticky ? "absolute" : "static",
-                    top: isSticky ? "0px" : "auto",
-                    zIndex: index + 10,
-                  }}
-                >
-                  <Text c="dimmed" fz="xs" fw="400" ta="center">
-                    {formatDate(msg.timestamp)}
-                  </Text>
-                </Card>
-              </Flex>
-            )}
-            <MessageComponent msg={msg} />
-          </div>
-        );
-      })}
+          return (
+            <div
+              key={msg._id}
+              id={msg._id}
+              data-message-id={msg._id}
+              data-message-date={date}
+            >
+              {showDateHeader && (
+                <Flex justify="center" p="0" m="0">
+                  <Card
+                    px="xs"
+                    py="2px"
+                    mt="4px"
+                    shadow="xs"
+                    radius="md"
+                    miw="80px"
+                    mih="24px"
+                    style={{
+                      position: isSticky ? "absolute" : "static",
+                      top: isSticky ? "0px" : "auto",
+                      zIndex: index + 10,
+                    }}
+                  >
+                    <Text c="dimmed" fz="xs" fw="400" ta="center">
+                      {formatDate(msg.timestamp)}
+                    </Text>
+                  </Card>
+                </Flex>
+              )}
+              <MessageComponent msg={msg} />
+            </div>
+          );
+        })}
     </div>
   );
 }
