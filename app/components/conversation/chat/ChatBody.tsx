@@ -5,7 +5,6 @@ import { usePaginatedQuery, useQuery } from "convex/react";
 import { useCallback, useEffect, useRef } from "react";
 import { InfiniteScroll } from "~/components/InfiniteScroll";
 import { useLastSeenConversation } from "~/hooks/useLastSeenConversation";
-import { ScrollProvider } from "~/providers/ScrollProvider";
 import { ChatMessages } from "./ChatMessages";
 
 import { ScrollToBottomButton } from "~/components/ScrollToBottomButton";
@@ -90,26 +89,26 @@ export function ChatBody() {
     }
   }, [results, setLastSeenAt]);
 
+  if (status !== "LoadingFirstPage") {
+    return null;
+  }
+
   return (
-    <ScrollProvider>
-      {status !== "LoadingFirstPage" ? (
-        <>
-          <InfiniteScroll
-            data={results}
-            status={status}
-            loadMore={loadMore}
-            ref={viewport}
-            onScrollPositionChange={onScrollPositionChange}
-          >
-            <ChatMessages viewportRef={viewport} messages={results} />
-            <ScrollToBottomButton
-              viewportRef={viewport}
-              label={unreadMessageCount}
-            />
-          </InfiniteScroll>
-          <ChatEditor />
-        </>
-      ) : null}
-    </ScrollProvider>
+    <>
+      <InfiniteScroll
+        data={results}
+        status={status}
+        loadMore={loadMore}
+        ref={viewport}
+        onScrollPositionChange={onScrollPositionChange}
+      >
+        <ChatMessages viewportRef={viewport} messages={results} />
+        <ScrollToBottomButton
+          viewportRef={viewport}
+          label={unreadMessageCount}
+        />
+      </InfiniteScroll>
+      <ChatEditor />
+    </>
   );
 }
