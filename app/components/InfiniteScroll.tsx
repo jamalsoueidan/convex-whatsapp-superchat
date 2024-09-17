@@ -40,14 +40,15 @@ export const InfiniteScroll = forwardRef<
     const element = document.getElementById(message.current);
 
     if (element) {
+      console.log("scroll into view");
       element.scrollIntoView({ behavior: "instant", block: "start" });
-      message.current = null;
     }
   }, []);
 
   // Load more when user scrolls to the top
   const onTopReached = useCallback(() => {
     if (status === "CanLoadMore") {
+      console.log(status);
       loadMore(20);
       message.current = data[0]._id;
     }
@@ -55,7 +56,9 @@ export const InfiniteScroll = forwardRef<
 
   useEffect(() => {
     if (status === "CanLoadMore" && message.current) {
+      console.log(status, "scrolltomessage");
       scrollToMessage();
+      message.current = null;
     }
   }, [data, scrollToMessage, status]);
 
