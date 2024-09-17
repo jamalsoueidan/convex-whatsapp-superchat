@@ -9,7 +9,6 @@ import {
   useImperativeHandle,
   useRef,
 } from "react";
-import { useScroll } from "~/providers/ScrollProvider";
 
 export const InfiniteScroll = forwardRef<
   HTMLDivElement | null,
@@ -20,8 +19,6 @@ export const InfiniteScroll = forwardRef<
     children: ReactNode;
   } & ScrollAreaProps
 >(({ data, status, loadMore, children }, ref) => {
-  const { setScrollPosition } = useScroll();
-
   const viewport = useRef<HTMLDivElement>(null);
 
   // Use useImperativeHandle to expose the ref
@@ -58,7 +55,6 @@ export const InfiniteScroll = forwardRef<
       bg="#efeae2"
       px="xs"
       flex="1"
-      onScrollPositionChange={setScrollPosition}
       onTopReached={onTopReached}
       viewportRef={viewport}
     >
