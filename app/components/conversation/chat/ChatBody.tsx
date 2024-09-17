@@ -20,6 +20,7 @@ export function ChatBody() {
     { initialNumItems: 25 }
   );
 
+  console.log(results, status);
   //const data = useMemo(() => results.sort((a, b) => b.timestamp - a.timestamp), [results])
 
   /*
