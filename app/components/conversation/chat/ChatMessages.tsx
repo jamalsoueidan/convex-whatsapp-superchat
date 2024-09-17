@@ -3,7 +3,6 @@ import { api } from "convex/_generated/api";
 import { UsePaginatedQueryReturnType } from "convex/react";
 import dayjs from "dayjs";
 import { useEffect, useState } from "react";
-import { useScroll } from "~/providers/ScrollProvider";
 import { MessageImage } from "./messages/MessageImage";
 import { MessageInteractive } from "./messages/MessageInteractive";
 import { MessageInteractiveReply } from "./messages/MessageInteractiveReply";
@@ -21,7 +20,7 @@ export function ChatMessages({
   messages: UsePaginatedQueryReturnType<typeof api.message.paginate>["results"];
   viewportRef: React.RefObject<HTMLDivElement>;
 }) {
-  const { scrollPosition } = useScroll();
+  const [scrollPosition, setScrollPosition] = useState(0);
   const [stickyStates, setStickyStates] = useState<Record<string, boolean>>({});
 
   const formatDate = (timestamp: number) => {
@@ -73,6 +72,21 @@ export function ChatMessages({
 
     setStickyStates(newStickyStates);
   }, [scrollPosition, viewportRef]);
+
+  useEffect(() => {
+    const currentViewport = viewportRef.current;
+
+    if (!currentViewport) return;
+
+    const handleScroll = () => {
+      setScrollPosition(currentViewport.scrollTop);
+    };
+
+    currentViewport.addEventListener("scroll", handleScroll);
+    return () => {
+      currentViewport.removeEventListener("scroll", handleScroll);
+    };
+  }, [viewportRef]);
 
   const MessageComponents: Record<
     string,

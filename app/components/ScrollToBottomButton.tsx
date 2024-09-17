@@ -2,18 +2,15 @@
 import { ActionIcon, Indicator, rem, Transition } from "@mantine/core";
 import { IconArrowDown } from "@tabler/icons-react";
 import { useEffect } from "react";
-import { useScroll } from "~/providers/ScrollProvider";
 
 export const ScrollToBottomButton: React.FC<{
   viewportRef: React.RefObject<HTMLDivElement>;
   label: number;
 }> = ({ viewportRef, label }) => {
-  const { scrollPosition } = useScroll();
-
   const isAtBottom =
     viewportRef.current &&
-    scrollPosition.y <
-      viewportRef.current.scrollHeight - viewportRef.current.clientHeight - 30;
+    viewportRef.current.scrollHeight - viewportRef.current.scrollTop ===
+      viewportRef.current.clientHeight;
 
   const scrollToBottom = () => {
     if (viewportRef.current) {
@@ -25,7 +22,7 @@ export const ScrollToBottomButton: React.FC<{
   };
 
   useEffect(() => {
-    console.log(isAtBottom);
+    console.log("isAtBottom", isAtBottom);
   }, [isAtBottom]);
 
   return (
