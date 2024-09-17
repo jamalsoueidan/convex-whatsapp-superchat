@@ -28,7 +28,8 @@ export function ChatBody() {
     conversationId as Id<"conversation">
   );
 
-  results.sort((a, b) => a.timestamp - b.timestamp);
+  results.sort((a, b) => b.timestamp - a.timestamp);
+  console.log(results);
 
   const previousMessage = useRef<Id<"message"> | null>(null);
 
