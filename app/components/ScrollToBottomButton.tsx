@@ -1,6 +1,7 @@
 /* eslint-disable react/prop-types */
 import { ActionIcon, Indicator, rem, Transition } from "@mantine/core";
 import { IconArrowDown } from "@tabler/icons-react";
+import { useEffect } from "react";
 import { useScroll } from "~/providers/ScrollProvider";
 
 export const ScrollToBottomButton: React.FC<{
@@ -22,6 +23,10 @@ export const ScrollToBottomButton: React.FC<{
       });
     }
   };
+
+  useEffect(() => {
+    console.log(isAtBottom);
+  }, [isAtBottom]);
 
   return (
     <div style={{ position: "absolute", bottom: "10px", right: "10px" }}>

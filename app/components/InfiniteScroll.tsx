@@ -1,7 +1,14 @@
-import { noop, ScrollArea, ScrollAreaProps } from "@mantine/core";
+import { ScrollArea, ScrollAreaProps } from "@mantine/core";
 import { api } from "convex/_generated/api";
 import { UsePaginatedQueryReturnType } from "convex/react";
-import { forwardRef, ReactNode, useImperativeHandle, useRef } from "react";
+import {
+  forwardRef,
+  ReactNode,
+  useCallback,
+  useEffect,
+  useImperativeHandle,
+  useRef,
+} from "react";
 import { useScroll } from "~/providers/ScrollProvider";
 
 export const InfiniteScroll = forwardRef<
@@ -12,21 +19,20 @@ export const InfiniteScroll = forwardRef<
     loadMore: (numItems: number) => void;
     children: ReactNode;
   } & ScrollAreaProps
->(({ data, status, loadMore, children, ...props }, ref) => {
+>(({ data, status, loadMore, children }, ref) => {
   const { setScrollPosition } = useScroll();
 
   const viewport = useRef<HTMLDivElement>(null);
-  console.log("test");
+
   // Use useImperativeHandle to expose the ref
   useImperativeHandle(ref, () => viewport.current as HTMLDivElement);
-  /*const message = useRef<string | null>(null);
+  const message = useRef<string | null>(null);
 
   const scrollToMessage = useCallback(() => {
     if (!message.current) return;
     const element = document.getElementById(message.current);
 
     if (element) {
-      console.log("scroll into view");
       element.scrollIntoView({ behavior: "instant", block: "start" });
     }
   }, []);
@@ -34,7 +40,6 @@ export const InfiniteScroll = forwardRef<
   // Load more when user scrolls to the top
   const onTopReached = useCallback(() => {
     if (status === "CanLoadMore") {
-      console.log(status);
       loadMore(20);
       message.current = data[0]._id;
     }
@@ -42,11 +47,10 @@ export const InfiniteScroll = forwardRef<
 
   useEffect(() => {
     if (status === "CanLoadMore" && message.current) {
-      console.log(status, "scrolltomessage");
       scrollToMessage();
       message.current = null;
     }
-  }, [data, scrollToMessage, status]);*/
+  }, [data, scrollToMessage, status]);
 
   return (
     <ScrollArea
@@ -54,8 +58,8 @@ export const InfiniteScroll = forwardRef<
       bg="#efeae2"
       px="xs"
       flex="1"
-      onScrollPositionChange={noop}
-      onTopReached={noop}
+      onScrollPositionChange={setScrollPosition}
+      onTopReached={onTopReached}
       viewportRef={viewport}
     >
       {children}

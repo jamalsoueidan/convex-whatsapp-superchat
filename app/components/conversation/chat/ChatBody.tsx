@@ -2,11 +2,14 @@ import { useParams } from "@remix-run/react";
 import { api } from "convex/_generated/api";
 import { Id } from "convex/_generated/dataModel";
 import { usePaginatedQuery, useQuery } from "convex/react";
-import { useRef } from "react";
+import { useCallback, useEffect, useRef } from "react";
 import { InfiniteScroll } from "~/components/InfiniteScroll";
+import { useLastSeenConversation } from "~/hooks/useLastSeenConversation";
 import { ScrollProvider } from "~/providers/ScrollProvider";
 import { ChatMessages } from "./ChatMessages";
 
+import { ScrollToBottomButton } from "~/components/ScrollToBottomButton";
+import { useCountUnreadMessages } from "~/hooks/useCountUnreadMessages";
 import { ChatEditor } from "./ChatEditor";
 
 export function ChatBody() {
@@ -18,11 +21,6 @@ export function ChatBody() {
     { conversation: conversationId as Id<"conversation"> },
     { initialNumItems: 25 }
   );
-
-  console.log(results, status);
-  //const data = useMemo(() => results.sort((a, b) => b.timestamp - a.timestamp), [results])
-
-  /*
   const unreadMessageCount = useCountUnreadMessages(
     conversationId as Id<"conversation">
   );
@@ -30,6 +28,7 @@ export function ChatBody() {
     conversationId as Id<"conversation">
   );
 
+  results.sort((a, b) => b.timestamp - a.timestamp);
 
   const previousMessage = useRef<Id<"message"> | null>(null);
 
@@ -89,9 +88,8 @@ export function ChatBody() {
     if (!hasMoreToScroll && results.length > 0) {
       setLastSeenAt();
     }
-  }, [results, setLastSeenAt]);*/
+  }, [results, setLastSeenAt]);
 
-  console.log("lets go");
   return (
     <ScrollProvider>
       {status !== "LoadingFirstPage" ? (
@@ -101,8 +99,13 @@ export function ChatBody() {
             status={status}
             loadMore={loadMore}
             ref={viewport}
+            onScrollPositionChange={onScrollPositionChange}
           >
             <ChatMessages viewportRef={viewport} messages={results} />
+            <ScrollToBottomButton
+              viewportRef={viewport}
+              label={unreadMessageCount}
+            />
           </InfiniteScroll>
           <ChatEditor />
         </>
