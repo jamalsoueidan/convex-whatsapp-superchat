@@ -20,6 +20,7 @@ export function ChatBody() {
     { conversation: conversationId as Id<"conversation"> },
     { initialNumItems: 25 }
   );
+
   const unreadMessageCount = useCountUnreadMessages(
     conversationId as Id<"conversation">
   );

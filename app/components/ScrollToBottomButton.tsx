@@ -1,16 +1,13 @@
 /* eslint-disable react/prop-types */
 import { ActionIcon, Indicator, rem, Transition } from "@mantine/core";
 import { IconArrowDown } from "@tabler/icons-react";
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
 
 export const ScrollToBottomButton: React.FC<{
   viewportRef: React.RefObject<HTMLDivElement>;
   label: number;
 }> = ({ viewportRef, label }) => {
-  const isAtBottom =
-    viewportRef.current &&
-    viewportRef.current.scrollHeight - viewportRef.current.scrollTop ===
-      viewportRef.current.clientHeight;
+  const [isAtBottom, setIsAtBottom] = useState(false);
 
   const scrollToBottom = () => {
     if (viewportRef.current) {
@@ -22,12 +19,29 @@ export const ScrollToBottomButton: React.FC<{
   };
 
   useEffect(() => {
-    console.log("isAtBottom", isAtBottom);
-  }, [isAtBottom]);
+    const currentViewport = viewportRef.current;
+
+    if (!currentViewport) return;
+
+    const handleScroll = () => {
+      // Check if the scroll is at the bottom
+      const isBottom =
+        currentViewport.scrollHeight - currentViewport.scrollTop <=
+        currentViewport.clientHeight + 1;
+
+      setIsAtBottom(isBottom);
+    };
+
+    currentViewport.addEventListener("scroll", handleScroll);
+
+    return () => {
+      currentViewport.removeEventListener("scroll", handleScroll);
+    };
+  }, [viewportRef]);
 
   return (
     <div style={{ position: "absolute", bottom: "10px", right: "10px" }}>
-      <Transition transition="slide-up" mounted={!!isAtBottom}>
+      <Transition transition="slide-up" mounted={!isAtBottom}>
         {(transitionStyles) => (
           <Indicator
             disabled={label === 0 || !isAtBottom}

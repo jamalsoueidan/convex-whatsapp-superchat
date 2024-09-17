@@ -54,40 +54,34 @@ export function ChatMessages({
   };
 
   useEffect(() => {
-    if (!viewportRef.current) return;
-    const messagesElements =
-      viewportRef.current.querySelectorAll("[data-message-id]");
-
-    const newStickyStates: Record<string, boolean> = {};
-
-    messagesElements.forEach((element: Element) => {
-      const rect = element.getBoundingClientRect();
-      const messageDate = element.getAttribute("data-message-date");
-
-      if (messageDate && !newStickyStates[messageDate]) {
-        // Make the date sticky if it's above the current viewport (i.e., it has scrolled past)
-        newStickyStates[messageDate] = rect.top <= 70;
-      }
-    });
-
-    setStickyStates(newStickyStates);
-  }, [viewportRef]);
-
-  /*
-  useEffect(() => {
     const currentViewport = viewportRef.current;
 
     if (!currentViewport) return;
 
     const handleScroll = () => {
-      setScrollPosition(currentViewport.scrollTop);
+      const messagesElements =
+        currentViewport.querySelectorAll("[data-message-id]");
+
+      const newStickyStates: Record<string, boolean> = {};
+
+      messagesElements.forEach((element: Element) => {
+        const rect = element.getBoundingClientRect();
+        const messageDate = element.getAttribute("data-message-date");
+
+        if (messageDate && !newStickyStates[messageDate]) {
+          // Make the date sticky if it's above the current viewport (i.e., it has scrolled past)
+          newStickyStates[messageDate] = rect.top <= 70;
+        }
+      });
+
+      setStickyStates(newStickyStates);
     };
 
     currentViewport.addEventListener("scroll", handleScroll);
     return () => {
       currentViewport.removeEventListener("scroll", handleScroll);
     };
-  }, [viewportRef]);*/
+  }, [viewportRef]);
 
   const MessageComponents: Record<
     string,
