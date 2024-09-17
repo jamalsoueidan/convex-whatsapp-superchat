@@ -24,11 +24,11 @@ export function ChatBody() {
   const unreadMessageCount = useCountUnreadMessages(
     conversationId as Id<"conversation">
   );
-  const [lastSeenAt, setLastSeenAt] = useLastSeenConversation(
+  const [, setLastSeenAt] = useLastSeenConversation(
     conversationId as Id<"conversation">
   );
 
-  console.log(unreadMessageCount, lastSeenAt);
+  console.log(results);
 
   const previousMessage = useRef<Id<"message"> | null>(null);
 
