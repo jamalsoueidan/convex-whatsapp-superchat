@@ -18,7 +18,7 @@ export const paginate = queryWithUser({
       .order("desc")
       .paginate(args.paginationOpts);
 
-    /*const page = await Promise.all(
+    const page = await Promise.all(
       paginate.page.map(async (message) => {
         const user = await ctx.db
           .query("users")
@@ -36,11 +36,11 @@ export const paginate = queryWithUser({
 
         return { ...message, user, reply, storage };
       })
-    );*/
+    );
 
     return {
       ...paginate,
-      page: paginate.page.sort((a, b) => a.timestamp - b.timestamp),
+      page,
     };
   },
 });
