@@ -2,7 +2,7 @@ import { Card, Flex, Text } from "@mantine/core";
 import { api } from "convex/_generated/api";
 import { UsePaginatedQueryReturnType } from "convex/react";
 import dayjs from "dayjs";
-import { useEffect, useState } from "react";
+import { useState } from "react";
 import { MessageImage } from "./messages/MessageImage";
 import { MessageInteractive } from "./messages/MessageInteractive";
 import { MessageInteractiveReply } from "./messages/MessageInteractiveReply";
@@ -53,7 +53,7 @@ export function ChatMessages({
     );
   };
 
-  useEffect(() => {
+  /*useEffect(() => {
     const currentViewport = viewportRef.current;
 
     if (!currentViewport) return;
@@ -80,7 +80,7 @@ export function ChatMessages({
     return () => {
       currentViewport.removeEventListener("scroll", handleScroll);
     };
-  }, [viewportRef]);
+  }, [viewportRef]);*/
 
   const MessageComponents: Record<
     string,
