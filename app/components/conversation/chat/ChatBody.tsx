@@ -20,7 +20,7 @@ export function ChatBody() {
     { initialNumItems: 25 }
   );
 
-  results.sort((a, b) => b.timestamp - a.timestamp);
+  //const data = useMemo(() => results.sort((a, b) => b.timestamp - a.timestamp), [results])
 
   /*
   const unreadMessageCount = useCountUnreadMessages(
