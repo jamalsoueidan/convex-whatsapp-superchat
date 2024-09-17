@@ -29,7 +29,6 @@ export function ChatBody() {
   );
 
   results.sort((a, b) => b.timestamp - a.timestamp);
-  console.log(results);
 
   const previousMessage = useRef<Id<"message"> | null>(null);
 
@@ -46,6 +45,7 @@ export function ChatBody() {
   useEffect(() => {
     if (results.length === 0) return;
     const lastMessage = results[results.length - 1];
+
     //first time load conversation
     if (!previousMessage.current) {
       previousMessage.current = lastMessage._id;
@@ -74,6 +74,13 @@ export function ChatBody() {
       setLastSeenAt();
     }
   }, [setLastSeenAt]);
+
+  // in case the message is few, and we dont have a scrollbar
+  useEffect(() => {
+    if (viewport.current?.scrollTop === 0 && results.length > 0) {
+      setLastSeenAt();
+    }
+  }, [results, setLastSeenAt]);
 
   return (
     <ScrollProvider>
