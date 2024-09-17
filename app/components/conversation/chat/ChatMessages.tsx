@@ -69,7 +69,6 @@ export function ChatMessages({
         const messageDate = element.getAttribute("data-message-date");
 
         if (messageDate && !newStickyStates[messageDate]) {
-          // Make the date sticky if it's above the current viewport (i.e., it has scrolled past)
           newStickyStates[messageDate] = rect.top <= 70;
         }
       });
@@ -124,6 +123,7 @@ export function ChatMessages({
                   shadow="xs"
                   radius="md"
                   miw="80px"
+                  mih="24px"
                   style={{
                     position: isSticky ? "absolute" : "static",
                     top: isSticky ? "0px" : "auto",

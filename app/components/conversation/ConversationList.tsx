@@ -1,4 +1,11 @@
-import { ActionIcon, Divider, Flex, ScrollArea, Title } from "@mantine/core";
+import {
+  ActionIcon,
+  Divider,
+  Flex,
+  ScrollArea,
+  Text,
+  Title,
+} from "@mantine/core";
 import { Link, useLocation, useParams } from "@remix-run/react";
 import { IconCirclePlus } from "@tabler/icons-react";
 import { api } from "convex/_generated/api";
@@ -13,7 +20,12 @@ export function ConversationList() {
   return (
     <>
       <Flex p="md" h="60px" justify="space-between" align="center" gap="xs">
-        <Title order={3}>Chat +1 (555) 623-1830</Title>
+        <Flex direction="row" align="center" gap="sm">
+          <Title order={3}>Chat</Title>
+          <Text fz="sm" fw="500" inline>
+            +1 (555) 623-1830
+          </Text>
+        </Flex>
         <ActionIcon
           component={Link}
           to={`${location.pathname}?toggle=contacts`}

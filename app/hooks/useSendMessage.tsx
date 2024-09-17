@@ -17,7 +17,6 @@ export const useSendMessage = () => {
         localStore.setQuery(api.message.paginate, value.args, {
           ...value.value,
           page: [
-            ...value.value.page,
             {
               _id: crypto.randomUUID() as Id<"message">,
               user,
@@ -27,6 +26,7 @@ export const useSendMessage = () => {
               recipient: conversation.customer_phone_number,
               ...args,
             },
+            ...value.value.page,
           ] as never,
         });
       }

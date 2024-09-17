@@ -28,8 +28,6 @@ export function ChatBody() {
     conversationId as Id<"conversation">
   );
 
-  results.sort((a, b) => b.timestamp - a.timestamp);
-
   const previousMessage = useRef<Id<"message"> | null>(null);
 
   const scrollToBotom = useCallback(() => {
@@ -99,7 +97,7 @@ export function ChatBody() {
         ref={viewport}
         onScrollPositionChange={onScrollPositionChange}
       >
-        <ChatMessages viewportRef={viewport} messages={results} />
+        <ChatMessages viewportRef={viewport} messages={results.reverse()} />
         <ScrollToBottomButton
           viewportRef={viewport}
           label={unreadMessageCount}
