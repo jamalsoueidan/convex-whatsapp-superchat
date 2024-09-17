@@ -15,9 +15,10 @@ export const paginate = queryWithUser({
       .withIndex("by_conversation", (q) =>
         q.eq("conversation", args.conversation)
       )
+      .order("desc")
       .paginate(args.paginationOpts);
 
-    const page = await Promise.all(
+    /*const page = await Promise.all(
       paginate.page.map(async (message) => {
         const user = await ctx.db
           .query("users")
@@ -35,12 +36,9 @@ export const paginate = queryWithUser({
 
         return { ...message, user, reply, storage };
       })
-    );
+    );*/
 
-    return {
-      ...paginate,
-      page,
-    };
+    return paginate;
   },
 });
 
