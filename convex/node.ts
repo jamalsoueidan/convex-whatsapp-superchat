@@ -42,14 +42,14 @@ export const interactiveButtons = internalAction({
     if (!trigger) {
       const result = await ctx.runMutation(internal.node.send, {
         conversation: message.conversation,
-        timestamp: message.timestamp + 20,
+        timestamp: message.timestamp,
         customerBot: customerBot._id,
         interactive,
         type,
       });
       node.data.trigger = {
         status: "waiting",
-        created_at: message.timestamp + 20,
+        created_at: message.timestamp,
         updated_at: null,
         count: (trigger?.count || 0) + 1,
         waiting: {
@@ -72,7 +72,7 @@ export const interactiveButtons = internalAction({
           message: message._id,
           ...message.interactive_reply,
         },
-        updated_at: message.timestamp + 20,
+        updated_at: message.timestamp,
       };
 
       return {
@@ -106,7 +106,7 @@ export const interactiveList = internalAction({
     if (!trigger) {
       const result = await ctx.runMutation(internal.node.send, {
         conversation: message.conversation,
-        timestamp: message.timestamp + 20,
+        timestamp: message.timestamp,
         customerBot: customerBot._id,
         interactive,
         type,
@@ -114,7 +114,7 @@ export const interactiveList = internalAction({
 
       node.data.trigger = {
         status: "waiting",
-        created_at: message.timestamp + 20,
+        created_at: message.timestamp,
         updated_at: null,
         count: (trigger?.count || 0) + 1,
         waiting: {
@@ -137,7 +137,7 @@ export const interactiveList = internalAction({
           message: message._id,
           ...message.interactive_reply,
         },
-        updated_at: message.timestamp + 20,
+        updated_at: message.timestamp,
       };
 
       return {
@@ -171,7 +171,7 @@ export const location = internalAction({
     if (!trigger) {
       const result = await ctx.runMutation(internal.node.send, {
         conversation: message.conversation,
-        timestamp: message.timestamp + 20,
+        timestamp: message.timestamp,
         customerBot: customerBot._id,
         location,
         type,
@@ -179,7 +179,7 @@ export const location = internalAction({
 
       node.data.trigger = {
         status: "done",
-        created_at: message.timestamp + 20,
+        created_at: message.timestamp,
         updated_at: null,
         count: (trigger?.count || 0) + 1,
         done: {
@@ -212,7 +212,7 @@ export const interactiveFlow = internalAction({
     if (!trigger) {
       const result = await ctx.runMutation(internal.node.send, {
         conversation: message.conversation,
-        timestamp: message.timestamp + 20,
+        timestamp: message.timestamp,
         customerBot: customerBot._id,
         interactive,
         type,
@@ -220,7 +220,7 @@ export const interactiveFlow = internalAction({
 
       node.data.trigger = {
         status: "waiting",
-        created_at: message.timestamp + 20,
+        created_at: message.timestamp,
         updated_at: null,
         count: (trigger?.count || 0) + 1,
         waiting: {
@@ -242,7 +242,7 @@ export const interactiveFlow = internalAction({
           message: message._id,
           ...message.interactive_reply,
         },
-        updated_at: message.timestamp + 20,
+        updated_at: message.timestamp,
       };
 
       return {
@@ -275,7 +275,7 @@ export const message = internalAction({
     if (!trigger) {
       const result = await ctx.runMutation(internal.node.send, {
         conversation: message.conversation,
-        timestamp: message.timestamp + 20,
+        timestamp: message.timestamp,
         customerBot: customerBot._id,
         text,
         type,
@@ -283,8 +283,8 @@ export const message = internalAction({
 
       node.data.trigger = {
         status: config.require_response ? "waiting" : "done",
-        created_at: message.timestamp + 20,
-        updated_at: message.timestamp + 20,
+        created_at: message.timestamp,
+        updated_at: message.timestamp,
         waiting: {
           message: result,
         },
@@ -301,7 +301,7 @@ export const message = internalAction({
           text: message.text,
           //media: message, //missing if response is media
         },
-        updated_at: message.timestamp + 20,
+        updated_at: message.timestamp,
       };
 
       return {
@@ -333,7 +333,7 @@ export const chat = internalAction({
 
     const result = await ctx.runMutation(internal.node.send, {
       conversation: message.conversation,
-      timestamp: message.timestamp + 20,
+      timestamp: message.timestamp,
       customerBot: customerBot._id,
       text: {
         body: JSON.parse(chatgptResponse.choices[0].message.content).message,
@@ -347,7 +347,7 @@ export const chat = internalAction({
 
     node.data.trigger = {
       status: "waiting",
-      created_at: message.timestamp + 20,
+      created_at: message.timestamp,
       updated_at: null,
       count: (node.data.trigger?.count || 0) + 1,
       waiting: {
@@ -391,7 +391,7 @@ export const send = internalMutation({
         business_phone_number_id: conversation.business_phone_number_id,
         recipient: conversation.customer_phone_number,
         type: args.type,
-        timestamp: args.timestamp,
+        timestamp: args.timestamp + 3,
         ...(args.text ? { text: args.text } : {}),
         ...(args.interactive ? { interactive: args.interactive } : {}),
         ...(args.location ? { location: args.location } : {}),
@@ -400,7 +400,7 @@ export const send = internalMutation({
       // update conversation timestamp
       await ctx.scheduler.runAfter(0, internal.conversation.updateTimestamp, {
         conversation: args.conversation,
-        timestamp: args.timestamp,
+        timestamp: args.timestamp + 3,
       });
 
       if (args.type !== "internal_message") {

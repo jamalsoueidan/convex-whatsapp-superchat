@@ -16,7 +16,7 @@ export function useLastSeenConversation(
   const setLastSeenAt = useCallback(() => {
     update({
       conversation: conversationId,
-      last_seen_at: Math.floor(Date.now() / 1000),
+      last_seen_at: Math.floor(Date.now() / 1000), // should be same as backend +20, this a bug now fix later,
     });
   }, [conversationId, update]);
 
