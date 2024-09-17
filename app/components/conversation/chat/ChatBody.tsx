@@ -77,7 +77,15 @@ export function ChatBody() {
 
   // in case the message is few, and we dont have a scrollbar
   useEffect(() => {
-    if (viewport.current?.scrollTop === 0 && results.length > 0) {
+    if (!viewport.current) return;
+
+    const hasMoreToScroll =
+      viewport.current.scrollHeight -
+        viewport.current.scrollTop -
+        viewport.current.clientHeight >
+      0;
+
+    if (!hasMoreToScroll && results.length > 0) {
       setLastSeenAt();
     }
   }, [results, setLastSeenAt]);
