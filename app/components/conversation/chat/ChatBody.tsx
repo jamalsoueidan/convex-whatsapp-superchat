@@ -89,10 +89,6 @@ export function ChatBody() {
     }
   }, [results, setLastSeenAt]);
 
-  if (status !== "LoadingFirstPage") {
-    return null;
-  }
-
   return (
     <>
       <InfiniteScroll
