@@ -98,7 +98,7 @@ export function ChatMessages({
   return (
     <div>
       {[...messages]
-        .sort((a, b) => b.timestamp - a.timestamp)
+        .sort((a, b) => a.timestamp - b.timestamp)
         .map((msg, index) => {
           const MessageComponent =
             MessageComponents[msg.type] || MessageUnknown;
