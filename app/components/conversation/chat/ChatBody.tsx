@@ -7,7 +7,6 @@ import { InfiniteScroll } from "~/components/InfiniteScroll";
 import { ScrollProvider } from "~/providers/ScrollProvider";
 import { ChatMessages } from "./ChatMessages";
 
-import { ScrollToBottomButton } from "~/components/ScrollToBottomButton";
 import { ChatEditor } from "./ChatEditor";
 
 export function ChatBody() {
@@ -104,7 +103,6 @@ export function ChatBody() {
             ref={viewport}
           >
             <ChatMessages viewportRef={viewport} messages={results} />
-            <ScrollToBottomButton viewportRef={viewport} label={0} />
           </InfiniteScroll>
           <ChatEditor />
         </>

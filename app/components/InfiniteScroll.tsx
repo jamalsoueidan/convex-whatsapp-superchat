@@ -1,5 +1,4 @@
 import { noop, ScrollArea, ScrollAreaProps } from "@mantine/core";
-import { useThrottledCallback } from "@mantine/hooks";
 import { api } from "convex/_generated/api";
 import { UsePaginatedQueryReturnType } from "convex/react";
 import { forwardRef, ReactNode, useImperativeHandle, useRef } from "react";
@@ -15,12 +14,6 @@ export const InfiniteScroll = forwardRef<
   } & ScrollAreaProps
 >(({ data, status, loadMore, children, ...props }, ref) => {
   const { setScrollPosition } = useScroll();
-  const throttledSetScrollPosition = useThrottledCallback((value) => {
-    setScrollPosition(value);
-    if (props.onScrollPositionChange) {
-      props.onScrollPositionChange(value);
-    }
-  }, 250);
 
   const viewport = useRef<HTMLDivElement>(null);
   console.log("test");
@@ -61,7 +54,7 @@ export const InfiniteScroll = forwardRef<
       bg="#efeae2"
       px="xs"
       flex="1"
-      onScrollPositionChange={throttledSetScrollPosition}
+      onScrollPositionChange={noop}
       onTopReached={noop}
       viewportRef={viewport}
     >
