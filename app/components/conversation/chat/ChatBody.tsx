@@ -85,7 +85,7 @@ export function ChatBody() {
             ref={viewport}
             onScrollPositionChange={onScrollPositionChange}
           >
-            <ChatMessages viewportRef={viewport} messages={results.reverse()} />
+            <ChatMessages viewportRef={viewport} messages={results} />
             <ScrollToBottomButton
               viewportRef={viewport}
               label={unreadMessageCount}

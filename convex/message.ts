@@ -15,7 +15,6 @@ export const paginate = queryWithUser({
       .withIndex("by_conversation", (q) =>
         q.eq("conversation", args.conversation)
       )
-      .order("desc")
       .paginate(args.paginationOpts);
 
     const page = await Promise.all(
