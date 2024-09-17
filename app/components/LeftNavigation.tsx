@@ -2,12 +2,7 @@ import "@mantine/core/styles.css";
 
 import { useAuthActions } from "@convex-dev/auth/react";
 import { ActionIcon, Avatar, Flex, Stack, Tooltip } from "@mantine/core";
-import {
-  IconBinaryTree2,
-  IconHome,
-  IconInbox,
-  IconUsers,
-} from "@tabler/icons-react";
+import { IconBinaryTree2, IconInbox, IconUsers } from "@tabler/icons-react";
 import { api } from "convex/_generated/api";
 import { useQuery } from "convex/react";
 
@@ -25,7 +20,6 @@ export const LeftNavigation = () => {
       justify="space-between"
     >
       <Stack justify="center" align="center" p="md">
-        <LeftNavigationLink label="Home" icon={IconHome} to="/" />
         <LeftNavigationLink
           label="Conversations"
           icon={IconInbox}

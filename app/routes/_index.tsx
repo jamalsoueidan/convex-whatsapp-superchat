@@ -1,5 +1,10 @@
-import { Divider, Flex, Stack, Text, Title } from "@mantine/core";
+import { redirect } from "@remix-run/react";
 
+export const loader = async () => {
+  return redirect("/conversation");
+};
+
+/*
 export default function Conversation() {
   return (
     <>
@@ -70,3 +75,4 @@ export default function Conversation() {
     </>
   );
 }
+*/

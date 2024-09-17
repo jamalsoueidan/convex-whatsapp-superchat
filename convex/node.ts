@@ -315,7 +315,48 @@ export const message = internalAction({
 export const chat = internalAction({
   args: nodeArgs,
   handler: async (ctx, args) => {
-    return "hej";
+    const { nodeIndex, message, customerBot } = args;
+
+    const node = customerBot.nodes[nodeIndex];
+
+    const edges = customerBot.edges.filter((edge) => edge.source === node.id);
+
+    // Find all nodes connected to the node (based on edges)
+    const nodes = customerBot.nodes.filter((nodeItem) =>
+      edges.some((edge) => edge.target === nodeItem.id)
+    );
+
+    const chatgptResponse = await ctx.runAction(internal.openai.askChat, {
+      content: message.text?.body || ":)",
+      nodes,
+    });
+
+    const result = await ctx.runMutation(internal.node.send, {
+      conversation: message.conversation,
+      timestamp: message.timestamp + 5,
+      customerBot: customerBot._id,
+      text: {
+        body: JSON.parse(chatgptResponse.choices[0].message.content).message,
+      },
+      type: "text",
+    });
+
+    const targetId: string = JSON.parse(
+      chatgptResponse.choices[0].message.content
+    ).node_id;
+
+    node.data.trigger = {
+      status: "waiting",
+      created_at: message.timestamp + 5,
+      updated_at: null,
+      count: (node.data.trigger?.count || 0) + 1,
+      waiting: {
+        message: result,
+        chat: [chatgptResponse],
+      },
+    };
+
+    return { updatedNode: node, done: !!targetId, targetId };
   },
 });
 

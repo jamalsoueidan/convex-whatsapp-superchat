@@ -1,7 +1,6 @@
 import { v } from "convex/values";
 import { internal } from "./_generated/api";
 import { internalAction } from "./_generated/server";
-import { postFB } from "./functions";
 
 export const send = internalAction({
   args: {
@@ -43,3 +42,24 @@ export const send = internalAction({
     });
   },
 });
+
+export async function postFB(url: string, body: object) {
+  return fetch(url, {
+    method: "POST",
+    headers: {
+      Authorization: `Bearer ${process.env.WHATSAPP_ACCESS_TOKEN}`,
+      "Content-Type": "application/json",
+    },
+    body: JSON.stringify(body),
+  });
+}
+
+export async function getFB(url: string) {
+  return fetch(url, {
+    method: "GET",
+    headers: {
+      Authorization: `Bearer ${process.env.WHATSAPP_ACCESS_TOKEN}`,
+      "Content-Type": "application/json",
+    },
+  });
+}

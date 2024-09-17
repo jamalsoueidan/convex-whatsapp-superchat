@@ -1,6 +1,6 @@
 import { v } from "convex/values";
 import { actionWithUser } from "./auth";
-import { getFB } from "./functions";
+import { getFB } from "./whatsapp";
 
 export type Flow = {
   id: string;
