@@ -90,6 +90,7 @@ export function ChatBody() {
     }
   }, [results, setLastSeenAt]);
 
+  console.log("lets go");
   return (
     <ScrollProvider>
       {status !== "LoadingFirstPage" ? (

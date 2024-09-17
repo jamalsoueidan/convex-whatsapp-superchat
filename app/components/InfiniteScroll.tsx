@@ -2,14 +2,7 @@ import { ScrollArea, ScrollAreaProps } from "@mantine/core";
 import { useThrottledCallback } from "@mantine/hooks";
 import { api } from "convex/_generated/api";
 import { UsePaginatedQueryReturnType } from "convex/react";
-import {
-  forwardRef,
-  ReactNode,
-  useCallback,
-  useEffect,
-  useImperativeHandle,
-  useRef,
-} from "react";
+import { forwardRef, ReactNode, useImperativeHandle, useRef } from "react";
 import { useScroll } from "~/providers/ScrollProvider";
 
 export const InfiniteScroll = forwardRef<
@@ -30,10 +23,10 @@ export const InfiniteScroll = forwardRef<
   }, 250);
 
   const viewport = useRef<HTMLDivElement>(null);
-
+  console.log("test");
   // Use useImperativeHandle to expose the ref
   useImperativeHandle(ref, () => viewport.current as HTMLDivElement);
-  const message = useRef<string | null>(null);
+  /*const message = useRef<string | null>(null);
 
   const scrollToMessage = useCallback(() => {
     if (!message.current) return;
@@ -60,7 +53,7 @@ export const InfiniteScroll = forwardRef<
       scrollToMessage();
       message.current = null;
     }
-  }, [data, scrollToMessage, status]);
+  }, [data, scrollToMessage, status]);*/
 
   return (
     <ScrollArea
