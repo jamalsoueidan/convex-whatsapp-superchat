@@ -1,8 +1,13 @@
 import { api } from "convex/_generated/api";
-import { useMutation } from "convex/react";
+import { Id } from "convex/_generated/dataModel";
+import { useMutation, useQuery } from "convex/react";
+import { useConversation } from "~/providers/ConversationProvider";
 
 export const useSendMessage = () => {
-  const send = useMutation(api.message.send); /*.withOptimisticUpdate(
+  const user = useQuery(api.auth.currentUser);
+  const conversation = useConversation();
+
+  const send = useMutation(api.message.send).withOptimisticUpdate(
     (localStore, args) => {
       const paginationValues = localStore.getAllQueries(api.message.paginate);
       const value = paginationValues.filter(
@@ -26,7 +31,7 @@ export const useSendMessage = () => {
         });
       }
     }
-  );*/
+  );
 
   return send;
 };
