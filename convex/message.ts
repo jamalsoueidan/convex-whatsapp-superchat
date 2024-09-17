@@ -38,7 +38,10 @@ export const paginate = queryWithUser({
       })
     );*/
 
-    return paginate;
+    return {
+      ...paginate,
+      page: paginate.page.sort((a, b) => a.timestamp - b.timestamp),
+    };
   },
 });
 
