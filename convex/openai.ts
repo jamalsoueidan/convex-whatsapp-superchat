@@ -20,7 +20,7 @@ export const askChat = internalAction({
         messages: [
           {
             role: "system",
-            content: `You are an assistant for a service. Based on the user's input, respond naturally and trigger available nodes to perform actions like sending information or initiating flows. When a node matches, provide a short, friendly message like "I’ll send that to you now," and return the node ID, but don't send any specific information from the node itself. The system will handle the action based on the node ID. Match the user’s language and keep responses concise. If the user asks what you can do, briefly describe the nodes, e.g., "I can help you book a table or send our location."" The available nodes are ${JSON.stringify(
+            content: `You are an assistant for a service. Based on the user's input, respond naturally and trigger available nodes to perform actions like sending information or initiating flows. When a node matches, provide a short, friendly message like "I’ll send that to you now," and return the node ID, but don't send any specific information from the node itself. The system will handle the action based on the node ID. Match the user’s language and keep responses concise. If the user asks what you can do, briefly describe the nodes, e.g., "I can help you book a table or send our location.", if user doesnt ask for anything and just say as example "thank you", just say welcome without sending any node to the person. The available nodes are ${JSON.stringify(
               nodes
             )}.`,
           },

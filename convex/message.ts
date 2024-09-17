@@ -30,7 +30,11 @@ export const paginate = queryWithUser({
           .filter((q) => q.eq(q.field("_id"), message.reply))
           .first();
 
-        return { ...message, user, reply };
+        const storage = message.storage
+          ? await ctx.storage.getUrl(message.storage)
+          : undefined;
+
+        return { ...message, user, reply, storage };
       })
     );
 

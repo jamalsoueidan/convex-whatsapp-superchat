@@ -12,6 +12,7 @@ import { MessageLocation } from "./messages/MessageLocation";
 import { MessageSystem } from "./messages/MessageSystem";
 import { MessageText } from "./messages/MessageText";
 import { MessageUnknown } from "./messages/MessageUnknown";
+import { MessageWrapperProps } from "./messages/MessageWrapper";
 
 export function ChatMessages({
   messages,
@@ -73,9 +74,24 @@ export function ChatMessages({
     setStickyStates(newStickyStates);
   }, [scrollPosition, viewportRef]);
 
+  const MessageComponents: Record<
+    string,
+    React.FC<{ msg: MessageWrapperProps["msg"] }>
+  > = {
+    text: MessageText,
+    image: MessageImage,
+    interactive: MessageInteractive,
+    interactive_reply: MessageInteractiveReply,
+    system: MessageSystem,
+    location: MessageLocation,
+    internal_message: MessageInternal,
+  };
+
   return (
     <div>
       {messages.reverse().map((msg, index) => {
+        const MessageComponent = MessageComponents[msg.type] || MessageUnknown;
+
         const showDateHeader =
           index === 0 || hasDayChanged(msg, messages[index - 1]);
 
@@ -111,24 +127,7 @@ export function ChatMessages({
                 </Card>
               </Flex>
             )}
-            {msg.type === "text" && <MessageText msg={msg} />}
-            {msg.type === "image" && <MessageImage msg={msg} />}
-            {msg.type === "interactive" && msg.interactive && (
-              <MessageInteractive msg={msg} />
-            )}
-            {msg.type === "interactive_reply" && msg.interactive_reply && (
-              <MessageInteractiveReply msg={msg} />
-            )}
-            {msg.type === "system" && <MessageSystem msg={msg} />}
-            {msg.type === "location" && <MessageLocation msg={msg} />}
-            {msg.type === "internal_message" && <MessageInternal msg={msg} />}
-            {msg.type !== "text" &&
-              msg.type !== "image" &&
-              msg.type !== "location" &&
-              msg.type !== "interactive" &&
-              msg.type !== "interactive_reply" &&
-              msg.type !== "system" &&
-              msg.type !== "internal_message" && <MessageUnknown msg={msg} />}
+            <MessageComponent msg={msg} />
           </div>
         );
       })}

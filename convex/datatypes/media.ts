@@ -100,7 +100,7 @@ export const run = internalAction({
 
     const file = await requestFile.blob();
 
-    const storageId = await ctx.storage.store(file);
+    const storage = await ctx.storage.store(file);
 
     await ctx.runMutation(internal.datatypes.media.insert, {
       msg_id: message.id,
@@ -108,7 +108,7 @@ export const run = internalAction({
       conversation,
       recipient: value.metadata.display_phone_number.toString(),
       timestamp: parseInt(message.timestamp, 10),
-      storageId,
+      storage,
       type: message.type,
     });
   },
@@ -120,7 +120,7 @@ export const insert = internalMutation({
     conversation: v.any(),
     msg_id: v.string(),
     recipient: v.string(),
-    storageId: v.id("_storage"),
+    storage: v.id("_storage"),
     timestamp: v.number(),
     type: v.string(),
   },

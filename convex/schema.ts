@@ -78,6 +78,13 @@ const schema = defineSchema({
                         sha256: v.string(),
                       })
                     ),
+                    image: v.optional(
+                      v.object({
+                        id: v.string(),
+                        mime_type: v.string(),
+                        sha256: v.string(),
+                      })
+                    ),
                   })
                 )
               ),
@@ -156,6 +163,7 @@ const schema = defineSchema({
     bot: v.optional(v.id("customerBot")),
     reply: v.optional(v.id("message")),
     user: v.optional(v.id("users")),
+    storage: v.optional(v.id("_storage")),
     conversation: v.id("conversation"),
     msg_id: v.string(),
     recipient: v.string(),
