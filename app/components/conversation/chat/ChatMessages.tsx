@@ -97,7 +97,7 @@ export function ChatMessages({
 
   return (
     <div>
-      {messages.reverse().map((msg, index) => {
+      {messages.map((msg, index) => {
         const MessageComponent = MessageComponents[msg.type] || MessageUnknown;
 
         const showDateHeader =
