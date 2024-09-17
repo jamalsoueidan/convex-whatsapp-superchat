@@ -42,10 +42,11 @@ export function ChatBody() {
   // Scroll to bottom on first load
   useEffect(() => {
     if (results.length === 0) return;
-    const lastMessage = results[results.length - 1];
+    const lastMessage = results[0];
 
     //first time load conversation
     if (!previousMessage.current) {
+      console.log("first time");
       previousMessage.current = lastMessage._id;
       setLastSeenAt();
       return scrollToBotom();
@@ -55,6 +56,7 @@ export function ChatBody() {
     const isMyMessage = lastMessage.user?._id === user?._id;
 
     if (isLastMessageNew && isMyMessage) {
+      console.log("next time");
       previousMessage.current = lastMessage._id;
       return scrollToBotom();
     }

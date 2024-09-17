@@ -5,8 +5,8 @@ import {
   forwardRef,
   ReactNode,
   useCallback,
-  useEffect,
   useImperativeHandle,
+  useLayoutEffect,
   useRef,
 } from "react";
 
@@ -32,20 +32,21 @@ export const InfiniteScroll = forwardRef<
     if (element) {
       element.scrollIntoView({ behavior: "instant", block: "start" });
     }
+    message.current = null;
   }, []);
 
   // Load more when user scrolls to the top
   const onTopReached = useCallback(() => {
     if (status === "CanLoadMore") {
       loadMore(20);
-      message.current = data[0]._id;
+      message.current = data[data.length - 1]._id;
+      console.log(data[data.length - 1]);
     }
   }, [status, data, loadMore]);
 
-  useEffect(() => {
+  useLayoutEffect(() => {
     if (status === "CanLoadMore" && message.current) {
       scrollToMessage();
-      message.current = null;
     }
   }, [data, scrollToMessage, status]);
 

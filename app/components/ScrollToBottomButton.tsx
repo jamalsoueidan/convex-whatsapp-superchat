@@ -23,7 +23,6 @@ export const ScrollToBottomButton: React.FC<{
 
   const checkIfAtBottom = useCallback(() => {
     if (!viewportRef.current) return;
-    console.log("do the check");
 
     const isBottom =
       viewportRef.current.scrollHeight - viewportRef.current.scrollTop <=
