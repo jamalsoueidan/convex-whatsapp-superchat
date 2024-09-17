@@ -2,7 +2,6 @@ import { Card, Flex, Text } from "@mantine/core";
 import { api } from "convex/_generated/api";
 import { UsePaginatedQueryReturnType } from "convex/react";
 import dayjs from "dayjs";
-import { useState } from "react";
 import { MessageImage } from "./messages/MessageImage";
 import { MessageInteractive } from "./messages/MessageInteractive";
 import { MessageInteractiveReply } from "./messages/MessageInteractiveReply";
@@ -20,9 +19,6 @@ export function ChatMessages({
   messages: UsePaginatedQueryReturnType<typeof api.message.paginate>["results"];
   viewportRef: React.RefObject<HTMLDivElement>;
 }) {
-  //const [scrollPosition, setScrollPosition] = useState(0);
-  const [stickyStates, setStickyStates] = useState<Record<string, boolean>>({});
-
   const formatDate = (timestamp: number) => {
     const messageDate = dayjs(timestamp * 1000);
     const currentDate = dayjs();
@@ -53,35 +49,6 @@ export function ChatMessages({
     );
   };
 
-  /*useEffect(() => {
-    const currentViewport = viewportRef.current;
-
-    if (!currentViewport) return;
-
-    const handleScroll = () => {
-      const messagesElements =
-        currentViewport.querySelectorAll("[data-message-id]");
-
-      const newStickyStates: Record<string, boolean> = {};
-
-      messagesElements.forEach((element: Element) => {
-        const rect = element.getBoundingClientRect();
-        const messageDate = element.getAttribute("data-message-date");
-
-        if (messageDate && !newStickyStates[messageDate]) {
-          newStickyStates[messageDate] = rect.top <= 70;
-        }
-      });
-
-      setStickyStates(newStickyStates);
-    };
-
-    currentViewport.addEventListener("scroll", handleScroll);
-    return () => {
-      currentViewport.removeEventListener("scroll", handleScroll);
-    };
-  }, [viewportRef]);*/
-
   const MessageComponents: Record<
     string,
     React.FC<{ msg: MessageWrapperProps["msg"] }>
@@ -108,8 +75,6 @@ export function ChatMessages({
 
           const date = dayjs(msg.timestamp * 1000).format("MM/DD/YYYY");
 
-          const isSticky = stickyStates[date];
-
           return (
             <div
               key={msg._id}
@@ -127,11 +92,6 @@ export function ChatMessages({
                     radius="md"
                     miw="80px"
                     mih="24px"
-                    style={{
-                      position: isSticky ? "absolute" : "static",
-                      top: isSticky ? "0px" : "auto",
-                      zIndex: index + 10,
-                    }}
                   >
                     <Text c="dimmed" fz="xs" fw="400" ta="center">
                       {formatDate(msg.timestamp)}

@@ -1,22 +1,36 @@
 /* eslint-disable react/prop-types */
 import { ActionIcon, Indicator, rem, Transition } from "@mantine/core";
 import { IconArrowDown } from "@tabler/icons-react";
-import { useEffect, useState } from "react";
+import { api } from "convex/_generated/api";
+import { UsePaginatedQueryReturnType } from "convex/react";
+import { useCallback, useEffect, useState } from "react";
 
 export const ScrollToBottomButton: React.FC<{
   viewportRef: React.RefObject<HTMLDivElement>;
   label: number;
-}> = ({ viewportRef, label }) => {
+  messages: UsePaginatedQueryReturnType<typeof api.message.paginate>["results"];
+}> = ({ viewportRef, label, messages }) => {
   const [isAtBottom, setIsAtBottom] = useState(false);
 
-  const scrollToBottom = () => {
+  const scrollToBottom = useCallback(() => {
     if (viewportRef.current) {
       viewportRef.current.scrollTo({
         top: viewportRef.current.scrollHeight,
         behavior: "smooth",
       });
     }
-  };
+  }, [viewportRef]);
+
+  const checkIfAtBottom = useCallback(() => {
+    if (!viewportRef.current) return;
+    console.log("do the check");
+
+    const isBottom =
+      viewportRef.current.scrollHeight - viewportRef.current.scrollTop <=
+      viewportRef.current.clientHeight + 1;
+
+    setIsAtBottom(isBottom);
+  }, [viewportRef]);
 
   useEffect(() => {
     const currentViewport = viewportRef.current;
@@ -24,12 +38,7 @@ export const ScrollToBottomButton: React.FC<{
     if (!currentViewport) return;
 
     const handleScroll = () => {
-      // Check if the scroll is at the bottom
-      const isBottom =
-        currentViewport.scrollHeight - currentViewport.scrollTop <=
-        currentViewport.clientHeight + 1;
-
-      setIsAtBottom(isBottom);
+      checkIfAtBottom();
     };
 
     currentViewport.addEventListener("scroll", handleScroll);
@@ -37,14 +46,18 @@ export const ScrollToBottomButton: React.FC<{
     return () => {
       currentViewport.removeEventListener("scroll", handleScroll);
     };
-  }, [viewportRef]);
+  }, [checkIfAtBottom, viewportRef]);
+
+  useEffect(() => {
+    checkIfAtBottom();
+  }, [checkIfAtBottom, messages]);
 
   return (
     <div style={{ position: "absolute", bottom: "10px", right: "10px" }}>
       <Transition transition="slide-up" mounted={!isAtBottom}>
         {(transitionStyles) => (
           <Indicator
-            disabled={label === 0 || !isAtBottom}
+            disabled={label === 0 || !!isAtBottom}
             position="top-start"
             offset={7}
             inline
