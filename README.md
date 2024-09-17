@@ -1,7 +1,5 @@
 # Whatsapp Application
 
-![Desktop](screenshots/bot.png)
-
 This project is a WhatsApp-based chat application that allows users to interact with WhatsApp via the WhatsApp Business API. The application provides a frontend interface built with React, using Realm for data storage and state management. It supports real-time chat functionality, user conversations, and message management.
 
 ## Features
