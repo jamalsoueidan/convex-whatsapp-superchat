@@ -13,7 +13,7 @@ export function ConversationList() {
   return (
     <>
       <Flex p="md" h="60px" justify="space-between" align="center" gap="xs">
-        <Title order={3}>Chat</Title>
+        <Title order={3}>Chat +1 (555) 623-1830</Title>
         <ActionIcon
           component={Link}
           to={`${location.pathname}?toggle=contacts`}

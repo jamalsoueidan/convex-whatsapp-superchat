@@ -20,9 +20,6 @@ export default function ConversationIndex() {
         <Text c="gray">
           Send and receive message s without keeping your phone online.
         </Text>
-        <Text c="gray">
-          Send and receive message s without keeping your phone online.
-        </Text>
       </Stack>
     </Flex>
   );
