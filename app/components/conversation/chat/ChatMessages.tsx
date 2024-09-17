@@ -20,7 +20,7 @@ export function ChatMessages({
   messages: UsePaginatedQueryReturnType<typeof api.message.paginate>["results"];
   viewportRef: React.RefObject<HTMLDivElement>;
 }) {
-  const [scrollPosition, setScrollPosition] = useState(0);
+  //const [scrollPosition, setScrollPosition] = useState(0);
   const [stickyStates, setStickyStates] = useState<Record<string, boolean>>({});
 
   const formatDate = (timestamp: number) => {
@@ -71,8 +71,9 @@ export function ChatMessages({
     });
 
     setStickyStates(newStickyStates);
-  }, [scrollPosition, viewportRef]);
+  }, [viewportRef]);
 
+  /*
   useEffect(() => {
     const currentViewport = viewportRef.current;
 
@@ -86,7 +87,7 @@ export function ChatMessages({
     return () => {
       currentViewport.removeEventListener("scroll", handleScroll);
     };
-  }, [viewportRef]);
+  }, [viewportRef]);*/
 
   const MessageComponents: Record<
     string,
