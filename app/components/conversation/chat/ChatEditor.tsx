@@ -64,14 +64,17 @@ export const ChatEditor = () => {
           timestamp: Math.floor(Date.now() / 1000),
         });
       } else {
-        send({
-          conversation: conversationId as Id<"conversation">,
-          type: "text",
-          text: {
-            body: editor.getText(),
-          },
-          timestamp: Math.floor(Date.now() / 1000),
-        });
+        const value = editor.getText();
+        if (value.length > 2) {
+          send({
+            conversation: conversationId as Id<"conversation">,
+            type: "text",
+            text: {
+              body: editor.getText(),
+            },
+            timestamp: Math.floor(Date.now() / 1000),
+          });
+        }
       }
 
       editor.commands.clearContent();

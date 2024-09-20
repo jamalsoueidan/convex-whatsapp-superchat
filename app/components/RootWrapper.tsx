@@ -7,7 +7,7 @@ export function RootWrapper({ children }: { children: React.ReactNode }) {
   const { height } = useViewportSize();
 
   return (
-    <Flex h={`${height}px`} direction={isMobile ? "column" : "row"}>
+    <Flex h={`${height - 1}px`} direction={isMobile ? "column" : "row"}>
       {children}
     </Flex>
   );

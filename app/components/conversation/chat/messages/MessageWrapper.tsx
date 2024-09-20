@@ -17,10 +17,12 @@ export const MessageWrapper = ({
   const backgroundColor = isRecipientDifferent ? "white" : "#d9fdd3";
   const justify = isRecipientDifferent ? "flex-start" : "flex-end";
 
+  const failed = msg.statuses?.find((r) => r.status === "failed");
+
   return (
     <Flex justify={justify} align="start" mr="xs" my={rem(8)} gap="6px">
       <Card
-        bg={bg || backgroundColor}
+        bg={failed ? "red" : bg || backgroundColor}
         py="4px"
         px="6px"
         miw={rem(55)}

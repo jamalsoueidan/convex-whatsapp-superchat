@@ -24,7 +24,7 @@ export function MessageTime({
     <Flex justify="flex-end">
       <Group gap="4px">
         <Text size={rem(11)} c="gray.6" lh="0">
-          {messageDate.format("HH:mm")}
+          {messageDate.format("dddd HH:mm")}
         </Text>
         {withChecks ? checks : null}
       </Group>
