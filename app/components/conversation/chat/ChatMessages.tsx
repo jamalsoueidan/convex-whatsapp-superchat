@@ -97,6 +97,8 @@ export const ChatMessages = ({
     [formatDate, messages]
   );
 
+  console.log(groupedMessages);
+
   return (
     <Fragment>
       <Flex
