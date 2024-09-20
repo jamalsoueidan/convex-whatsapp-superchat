@@ -14,7 +14,6 @@ export function MessageImage({
 }) {
   const [opened, { open, close }] = useDisclosure(false);
 
-  console.log(msg);
   return (
     <>
       <MessageWrapper msg={msg}>

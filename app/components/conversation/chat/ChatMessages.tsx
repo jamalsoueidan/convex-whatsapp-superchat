@@ -92,12 +92,11 @@ export const ChatMessages = ({
           groups[date] = [];
         }
         groups[date].push(msg);
+        groups[date].sort((a, b) => a.timestamp - b.timestamp);
         return groups;
       }, {} as Record<string, typeof messages>),
     [formatDate, messages]
   );
-
-  console.log(groupedMessages);
 
   return (
     <Fragment>
@@ -140,7 +139,7 @@ export const ChatMessages = ({
                 </Card>
               </Flex>
             </div>
-            {groupedMessages[date].reverse().map((msg) => {
+            {groupedMessages[date].map((msg) => {
               const MessageComponent =
                 MessageComponents[msg.type] || MessageUnknown;
               return <MessageComponent msg={msg} key={msg._id} />;
