@@ -18,6 +18,7 @@ export const send = internalAction({
     ),
   },
   handler: async (ctx, args) => {
+    console.log("send", args);
     const response = await postFB(
       `https://graph.facebook.com/v20.0/${args.business_phone_number_id}/messages`,
       {
