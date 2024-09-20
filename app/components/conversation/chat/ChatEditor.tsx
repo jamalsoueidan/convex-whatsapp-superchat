@@ -65,7 +65,7 @@ export const ChatEditor = () => {
         });
       } else {
         const value = editor.getText();
-        if (value.length > 2) {
+        if (value.length > 0) {
           send({
             conversation: conversationId as Id<"conversation">,
             type: "text",
