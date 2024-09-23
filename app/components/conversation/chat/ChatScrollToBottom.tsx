@@ -8,7 +8,7 @@ export const ChatScrollToBottom: React.FC<{
   scrollToBotom: () => void;
 }> = ({ isAtBottom, label, scrollToBotom }) => {
   return (
-    <div style={{ position: "fixed", bottom: "80px", right: "25px" }}>
+    <div style={{ position: "fixed", bottom: "130px", right: "25px" }}>
       <Transition transition="slide-up" mounted={!isAtBottom}>
         {(transitionStyles) => (
           <Indicator
@@ -26,7 +26,7 @@ export const ChatScrollToBottom: React.FC<{
               onClick={scrollToBotom}
               color="white"
               radius="xl"
-              size="xl"
+              size="lg"
             >
               <IconArrowDown style={{ width: rem(24), height: rem(24) }} />
             </ActionIcon>

@@ -56,20 +56,10 @@ export const Data = Table("data", {
                   text: v.optional(v.object({ body: v.string() })),
                   timestamp: v.string(),
                   type: v.string(),
-                  video: v.optional(
-                    v.object({
-                      id: v.string(),
-                      mime_type: v.string(),
-                      sha256: v.string(),
-                    })
-                  ),
-                  image: v.optional(
-                    v.object({
-                      id: v.string(),
-                      mime_type: v.string(),
-                      sha256: v.string(),
-                    })
-                  ),
+                  audio: v.optional(v.any()),
+                  video: v.optional(v.any()),
+                  image: v.optional(v.any()),
+                  location: v.optional(v.any()),
                 })
               )
             ),

@@ -6,6 +6,7 @@ import dayjs from "dayjs";
 import { Fragment, useCallback, useEffect, useMemo } from "react";
 import { ChatScrollToBottom } from "~/components/conversation/chat/ChatScrollToBottom";
 import { useInteractiveObserver } from "~/hooks/useInteractiveObserver";
+import { MessageAudio } from "./messages/MessageAudio";
 import { MessageImage } from "./messages/MessageImage";
 import { MessageInteractive } from "./messages/MessageInteractive";
 import { MessageInteractiveReply } from "./messages/MessageInteractiveReply";
@@ -14,6 +15,7 @@ import { MessageLocation } from "./messages/MessageLocation";
 import { MessageSystem } from "./messages/MessageSystem";
 import { MessageText } from "./messages/MessageText";
 import { MessageUnknown } from "./messages/MessageUnknown";
+import { MessageVideo } from "./messages/MessageVideo";
 import { MessageWrapperProps } from "./messages/MessageWrapper";
 
 const MessageComponents: Record<
@@ -22,6 +24,8 @@ const MessageComponents: Record<
 > = {
   text: MessageText,
   image: MessageImage,
+  video: MessageVideo,
+  audio: MessageAudio,
   interactive: MessageInteractive,
   interactive_reply: MessageInteractiveReply,
   system: MessageSystem,
@@ -103,7 +107,6 @@ export const ChatMessages = ({
       <Flex
         direction="column-reverse"
         flex={1}
-        pl="xs"
         pos="sticky"
         style={{
           overflow: "auto",
@@ -139,6 +142,7 @@ export const ChatMessages = ({
                 </Card>
               </Flex>
             </div>
+
             {groupedMessages[date].map((msg) => {
               const MessageComponent =
                 MessageComponents[msg.type] || MessageUnknown;

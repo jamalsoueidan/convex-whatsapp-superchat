@@ -40,7 +40,19 @@ export const run = internalAction({
                     from: v.string(),
                     id: v.string(),
                     timestamp: v.string(),
-                    type: v.union(v.literal("image"), v.literal("video")),
+                    type: v.union(
+                      v.literal("image"),
+                      v.literal("video"),
+                      v.literal("audio")
+                    ),
+                    audio: v.optional(
+                      v.object({
+                        mime_type: v.string(),
+                        sha256: v.string(),
+                        id: v.string(),
+                        voice: v.boolean(),
+                      })
+                    ),
                     image: v.optional(
                       v.object({
                         mime_type: v.string(),
@@ -77,6 +89,8 @@ export const run = internalAction({
       id = message.image.id;
     } else if (message.video) {
       id = message.video.id;
+    } else if (message.audio) {
+      id = message.audio.id;
     }
     const business_phone_number_id = value.metadata.phone_number_id.toString();
     const conversation = await ctx.runMutation(

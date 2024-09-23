@@ -63,12 +63,12 @@ export const incoming = internalAction({
 
       if (type === "text") {
         await ctx.runAction(internal.data.text.run, args);
-      } else if (type === "image") {
-        await ctx.runAction(internal.data.media.run, args);
-      } else if (type === "video") {
+      } else if (type === "image" || type === "video" || type === "audio") {
         await ctx.runAction(internal.data.media.run, args);
       } else if (type === "interactive") {
         await ctx.runAction(internal.data.interactiveReply.run, args);
+      } else if (type === "location") {
+        await ctx.runAction(internal.data.location.run, args);
       }
     } else if (value.statuses) {
       await ctx.runAction(internal.data.status.run, args);

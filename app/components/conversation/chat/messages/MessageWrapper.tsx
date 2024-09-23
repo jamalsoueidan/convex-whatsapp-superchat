@@ -18,7 +18,7 @@ export const MessageWrapper = ({
   const failed = msg.statuses?.find((r) => r.status === "failed");
 
   return (
-    <Flex justify={justify} align="start" mr="xs" my={rem(8)} gap="6px">
+    <Flex justify={justify} align="start" m="xs" my={rem(8)} gap="6px">
       <Card
         bg={failed ? "red.2" : bg || backgroundColor}
         py="4px"
@@ -27,6 +27,7 @@ export const MessageWrapper = ({
         shadow="xs"
         radius="md"
         maw={{ base: "80%", md: "40%" }}
+        style={{ border: "1px solid #ccc" }}
       >
         {children}
       </Card>

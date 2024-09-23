@@ -21,6 +21,7 @@ import type * as conversation from "../conversation.js";
 import type * as customer_bot from "../customer_bot.js";
 import type * as data_conversation from "../data/conversation.js";
 import type * as data_interactiveReply from "../data/interactiveReply.js";
+import type * as data_location from "../data/location.js";
 import type * as data_media from "../data/media.js";
 import type * as data_status from "../data/status.js";
 import type * as data_text from "../data/text.js";
@@ -56,6 +57,7 @@ declare const fullApi: ApiFromModules<{
   customer_bot: typeof customer_bot;
   "data/conversation": typeof data_conversation;
   "data/interactiveReply": typeof data_interactiveReply;
+  "data/location": typeof data_location;
   "data/media": typeof data_media;
   "data/status": typeof data_status;
   "data/text": typeof data_text;
