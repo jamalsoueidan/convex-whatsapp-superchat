@@ -32,8 +32,12 @@ export function MessageContacts({
           variant="transparent"
           leftSection={
             <Avatar.Group spacing="lg">
-              <Avatar />
-              <Avatar />
+              {msg.contacts && msg.contacts.length > 1 ? (
+                <>
+                  <Avatar />
+                  <Avatar />
+                </>
+              ) : null}
               <Avatar>+{msg.contacts?.length}</Avatar>
             </Avatar.Group>
           }
