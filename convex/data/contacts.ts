@@ -2,7 +2,7 @@ import { pick } from "convex-helpers";
 import { v } from "convex/values";
 import { internal } from "../_generated/api";
 import { internalAction, internalMutation } from "../_generated/server";
-import { Message, text } from "./../tables/message";
+import { contacts, Message } from "../tables/message";
 
 export const run = internalAction({
   args: v.object({
@@ -32,11 +32,11 @@ export const run = internalAction({
               messages: v.optional(
                 v.array(
                   v.object({
+                    contacts,
                     from: v.string(),
                     id: v.string(),
                     timestamp: v.string(),
-                    type: v.literal("text"),
-                    text,
+                    type: v.literal("contacts"),
                   })
                 )
               ),
@@ -56,17 +56,14 @@ export const run = internalAction({
       const message = value.messages[0];
       const business_phone_number_id = value.metadata.phone_number_id;
       if (conversation) {
-        await ctx.runMutation(internal.data.text.insert, {
+        await ctx.runMutation(internal.data.contacts.insert, {
           msg_id: message.id,
           business_phone_number_id,
           conversation,
           direction: "incoming",
           timestamp: parseInt(message.timestamp, 10),
-          text: {
-            preview_url: true,
-            body: message.text.body,
-          },
           type: message.type,
+          contacts: message.contacts,
         });
       }
     }
@@ -83,7 +80,7 @@ export const insert = internalMutation({
       "direction",
       "type",
     ]),
-    text,
+    contacts,
   },
   handler: async (ctx, args) => {
     const message = await ctx.db.insert("message", args);

@@ -36,12 +36,7 @@ export const run = internalAction({
                     id: v.string(),
                     timestamp: v.string(),
                     type: v.literal("location"),
-                    location: v.object({
-                      latitude: v.float64(),
-                      longitude: v.float64(),
-                      name: v.optional(v.string()),
-                      url: v.optional(v.string()),
-                    }),
+                    location,
                   })
                 )
               ),
@@ -67,12 +62,7 @@ export const run = internalAction({
           conversation,
           direction: "incoming",
           timestamp: parseInt(message.timestamp, 10),
-          location: {
-            name: message.location.name || "",
-            address: message.location.url || "",
-            latitude: message.location.latitude.toString(),
-            longitude: message.location.longitude.toString(),
-          },
+          location: message.location,
           type: message.type,
         });
       }

@@ -32,11 +32,20 @@ export const run = internalAction({
               messages: v.optional(
                 v.array(
                   v.object({
+                    errors: v.array(
+                      v.object({
+                        code: v.number(),
+                        title: v.string(),
+                        message: v.string(),
+                        error_data: v.object({
+                          details: v.string(),
+                        }),
+                      })
+                    ),
                     from: v.string(),
                     id: v.string(),
                     timestamp: v.string(),
-                    type: v.literal("text"),
-                    text,
+                    type: v.literal("unsupported"),
                   })
                 )
               ),
@@ -62,11 +71,10 @@ export const run = internalAction({
           conversation,
           direction: "incoming",
           timestamp: parseInt(message.timestamp, 10),
-          text: {
-            preview_url: true,
-            body: message.text.body,
-          },
           type: message.type,
+          text: {
+            body: message.errors[0].error_data.details,
+          },
         });
       }
     }

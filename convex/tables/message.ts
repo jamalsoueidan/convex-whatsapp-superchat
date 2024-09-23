@@ -13,8 +13,9 @@ export const text = v.object({
 });
 
 export const location = v.object({
-  name: v.string(),
-  address: v.string(),
+  name: v.optional(v.string()),
+  address: v.optional(v.string()),
+  url: v.optional(v.string()),
   latitude: v.string(),
   longitude: v.string(),
 });
@@ -26,6 +27,26 @@ export const status = v.object({
 });
 
 export const statuses = v.array(status);
+
+export const contacts = v.array(
+  v.object({
+    name: v.object({
+      first_name: v.string(),
+      formatted_name: v.string(),
+      last_name: v.optional(v.string()),
+      middle_name: v.optional(v.string()),
+    }),
+    phones: v.optional(
+      v.array(
+        v.object({
+          phone: v.string(),
+          type: v.string(),
+          wa_id: v.optional(v.string()),
+        })
+      )
+    ),
+  })
+);
 
 export const interactive = v.object({
   action: v.object({
@@ -124,4 +145,5 @@ export const Message = Table("message", {
   statuses: v.optional(statuses),
   text: v.optional(text),
   location: v.optional(location),
+  contacts: v.optional(contacts),
 });

@@ -20,6 +20,39 @@ export const Data = Table("data", {
             messages: v.optional(
               v.array(
                 v.object({
+                  errors: v.optional(
+                    v.array(
+                      v.object({
+                        code: v.number(),
+                        title: v.string(),
+                        message: v.string(),
+                        error_data: v.object({
+                          details: v.string(),
+                        }),
+                      })
+                    )
+                  ),
+                  contacts: v.optional(
+                    v.array(
+                      v.object({
+                        name: v.object({
+                          first_name: v.string(),
+                          formatted_name: v.string(),
+                          last_name: v.optional(v.string()),
+                          middle_name: v.optional(v.string()),
+                        }),
+                        phones: v.optional(
+                          v.array(
+                            v.object({
+                              phone: v.string(),
+                              type: v.string(),
+                              wa_id: v.optional(v.string()),
+                            })
+                          )
+                        ),
+                      })
+                    )
+                  ),
                   context: v.optional(
                     v.object({
                       from: v.string(),

@@ -69,11 +69,13 @@ export const incoming = internalAction({
         await ctx.runAction(internal.data.interactiveReply.run, args);
       } else if (type === "location") {
         await ctx.runAction(internal.data.location.run, args);
+      } else if (type === "contacts") {
+        await ctx.runAction(internal.data.contacts.run, args);
+      } else if (type === "unsupported") {
+        await ctx.runAction(internal.data.unsupported.run, args);
       }
     } else if (value.statuses) {
       await ctx.runAction(internal.data.status.run, args);
-    } else {
-      throw new Error("unspported");
     }
 
     await ctx.runMutation(internal.webhooks.insert, args);

@@ -7,6 +7,7 @@ import { Fragment, useCallback, useEffect, useMemo } from "react";
 import { ChatScrollToBottom } from "~/components/conversation/chat/ChatScrollToBottom";
 import { useInteractiveObserver } from "~/hooks/useInteractiveObserver";
 import { MessageAudio } from "./messages/MessageAudio";
+import { MessageContacts } from "./messages/MessageContacts";
 import { MessageImage } from "./messages/MessageImage";
 import { MessageInteractive } from "./messages/MessageInteractive";
 import { MessageInteractiveReply } from "./messages/MessageInteractiveReply";
@@ -31,6 +32,7 @@ const MessageComponents: Record<
   system: MessageSystem,
   location: MessageLocation,
   internal_message: MessageInternal,
+  contacts: MessageContacts,
 };
 
 export const ChatMessages = ({
