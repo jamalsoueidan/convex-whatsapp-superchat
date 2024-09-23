@@ -44,19 +44,19 @@ export function Layout({ children }: { children: React.ReactNode }) {
       <body>
         <MantineProvider theme={theme}>
           <ConvexAuthProvider client={convex}>
-            <RootWrapper>
-              <Authenticated>
-                <UserProvider>
+            <Authenticated>
+              <UserProvider>
+                <RootWrapper>
                   <Navigation />
                   {children}
                   <BottomNavigation />
-                </UserProvider>
-              </Authenticated>
+                </RootWrapper>
+              </UserProvider>
+            </Authenticated>
 
-              <Unauthenticated>
-                <SignIn />
-              </Unauthenticated>
-            </RootWrapper>
+            <Unauthenticated>
+              <SignIn />
+            </Unauthenticated>
           </ConvexAuthProvider>
         </MantineProvider>
         <ScrollRestoration />
