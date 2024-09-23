@@ -3,7 +3,6 @@ import { Outlet, useLocation, useNavigate, useParams } from "@remix-run/react";
 import { api } from "convex/_generated/api";
 import { Id } from "convex/_generated/dataModel";
 import { useQuery } from "convex/react";
-import { useMemo } from "react";
 import { ChatBody } from "~/components/conversation/chat/ChatBody";
 import { ChatHeader } from "~/components/conversation/chat/ChatHeader";
 import { CustomDrawer } from "~/components/CustomDrawer";
@@ -20,30 +19,21 @@ export default function ConversationId() {
     conversation: conversationId as Id<"conversation">,
   });
 
-  const components = useMemo(() => {
-    if (conversation) {
-      return (
-        <ConversationProvider conversation={conversation}>
-          <ChatHeader />
-          <ChatBody />
-          <Outlet />
-        </ConversationProvider>
-      );
-    }
-    return null;
-  }, [conversation]);
-
   if (!conversation) {
     return null;
   }
 
   return isMobile ? (
     <CustomDrawer onClose={() => navigate("/conversation")} opened>
-      {components}
+      <ConversationProvider conversation={conversation}>
+        <ChatHeader />
+        <ChatBody />
+        <Outlet />
+      </ConversationProvider>
     </CustomDrawer>
   ) : (
     <Flex
-      bg="#f0f2f5"
+      bg="white"
       flex="1"
       style={{
         overflow: "hidden",
@@ -52,7 +42,11 @@ export default function ConversationId() {
       }}
       direction="column"
     >
-      {components}
+      <ConversationProvider conversation={conversation}>
+        <ChatHeader />
+        <ChatBody />
+        <Outlet />
+      </ConversationProvider>
     </Flex>
   );
 }

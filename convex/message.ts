@@ -61,6 +61,21 @@ export const getLastMessageInConversation = queryWithUser({
   },
 });
 
+export const getLastMessageReceivedInConversation = queryWithUser({
+  args: {
+    conversation: v.id("conversation"),
+  },
+  handler: async (ctx, args) => {
+    return await ctx.db
+      .query("message")
+      .withIndex("by_conversation_and_direction", (q) =>
+        q.eq("conversation", args.conversation).eq("direction", "incoming")
+      )
+      .order("desc")
+      .first();
+  },
+});
+
 // this is used in the front end to send message
 export const send = mutationWithUser({
   args: {
@@ -84,13 +99,13 @@ export const send = mutationWithUser({
     }
 
     try {
-      //create the message FAST to indicate to user its send!
+      //create the message FAST to indicate to system user its send!
       const response = await ctx.db.insert("message", {
         user: ctx.user,
-        msg_id: args.type === "internal_message" ? "system" : "not_send_yet",
+        msg_id: "not_send_yet",
         conversation: conversation._id,
         business_phone_number_id: conversation.business_phone_number_id,
-        recipient: conversation.customer_phone_number,
+        direction: args.type === "internal_message" ? "system" : "outgoing",
         type: args.type,
         timestamp: args.timestamp,
         ...(args.text ? { text: args.text } : {}),
@@ -102,6 +117,7 @@ export const send = mutationWithUser({
       await ctx.scheduler.runAfter(0, internal.conversation.updateTimestamp, {
         conversation: args.conversation,
         timestamp: args.timestamp,
+        outgoing_timestamp: args.timestamp,
       });
 
       if (args.type !== "internal_message") {

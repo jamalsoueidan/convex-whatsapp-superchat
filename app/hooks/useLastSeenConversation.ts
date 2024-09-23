@@ -6,7 +6,7 @@ import { useCallback } from "react";
 export function useLastSeenConversation(
   conversationId: Id<"conversation">
 ): [number, () => void] {
-  const userConversation = useQuery(api.user_conversation.find, {
+  const userConversation = useQuery(api.user_conversation.get, {
     conversation: conversationId,
   });
   const update = useMutation(api.user_conversation.update);

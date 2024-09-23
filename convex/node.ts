@@ -389,7 +389,7 @@ export const send = internalMutation({
         msg_id: args.type === "internal_message" ? "system" : "not_send_yet",
         conversation: conversation._id,
         business_phone_number_id: conversation.business_phone_number_id,
-        recipient: conversation.customer_phone_number,
+        direction: "outgoing",
         type: args.type,
         timestamp: args.timestamp + 3,
         ...(args.text ? { text: args.text } : {}),
@@ -401,6 +401,7 @@ export const send = internalMutation({
       await ctx.scheduler.runAfter(0, internal.conversation.updateTimestamp, {
         conversation: args.conversation,
         timestamp: args.timestamp + 3,
+        outgoing_timestamp: args.timestamp + 3,
       });
 
       if (args.type !== "internal_message") {

@@ -1,4 +1,6 @@
+import { WithoutSystemFields } from "convex/server";
 import { v } from "convex/values";
+import { Doc } from "../_generated/dataModel";
 import { internalMutation } from "../_generated/server";
 
 export const insert = internalMutation({
@@ -45,7 +47,7 @@ export const insert = internalMutation({
     const value = args.entry[0].changes[0].value;
     const business_phone_number_id = value.metadata.phone_number_id.toString();
     let customer_phone_number = "";
-    let set = {
+    let set: WithoutSystemFields<Doc<"conversation">> = {
       business_phone_number_id,
       customer_phone_number,
       timestamp: 0,
@@ -61,6 +63,7 @@ export const insert = internalMutation({
         customer_phone_number,
         name: "unknown",
         timestamp: parseInt(status.timestamp, 10),
+        incoming_timestamp: parseInt(status.timestamp, 10),
       };
     }
 
@@ -72,7 +75,10 @@ export const insert = internalMutation({
         customer_phone_number,
         name: contact.profile.name,
         ...(value.messages
-          ? { timestamp: parseInt(value.messages[0].timestamp, 10) }
+          ? {
+              timestamp: parseInt(value.messages[0].timestamp, 10),
+              incoming_timestamp: parseInt(value.messages[0].timestamp, 10),
+            }
           : { timestamp: 0 }),
       };
     }

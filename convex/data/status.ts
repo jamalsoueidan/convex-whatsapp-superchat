@@ -59,7 +59,7 @@ export const run = internalAction({
     const statuses = value.statuses[0];
     const msg_id = statuses.id;
 
-    await ctx.runMutation(internal.datatypes.status.update, {
+    await ctx.runMutation(internal.data.status.update, {
       msg_id,
       status: {
         status: statuses.status,

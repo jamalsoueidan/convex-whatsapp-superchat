@@ -1,6 +1,8 @@
+import { pick } from "convex-helpers";
 import { v } from "convex/values";
 import { internal } from "../_generated/api";
 import { internalAction, internalMutation } from "../_generated/server";
+import { interactive_reply, Message } from "../tables/message";
 
 export const run = internalAction({
   args: v.object({
@@ -79,7 +81,7 @@ export const run = internalAction({
     }
     const message = value.messages[0];
 
-    const reply = await ctx.runMutation(internal.datatypes.status.update, {
+    const reply = await ctx.runMutation(internal.data.status.update, {
       msg_id: message.context.id,
       status: {
         status: "replied",
@@ -101,59 +103,51 @@ export const run = internalAction({
 
       // TDOO:
       // missing creating a reply to the user when going through the flow
-      const flowReply = {
+
+      await ctx.runMutation(internal.data.interactiveReply.insert, {
         msg_id: message.id,
         bot: reply.bot,
         reply: reply._id,
         business_phone_number_id,
         conversation: reply?.conversation,
-        recipient: value.metadata.display_phone_number.toString(),
+        direction: "incoming",
         timestamp: parseInt(message.timestamp, 10) + 5,
         interactive_reply: {
           flow_reply: interactive_reply,
           type: "flow_reply",
         },
         type: "interactive_reply",
-      };
-
-      await ctx.runMutation(
-        internal.datatypes.interactiveReply.insert,
-        flowReply
-      );
+      });
     } else {
-      // either button reply or list reply
-      const buttonReply = {
+      await ctx.runMutation(internal.data.interactiveReply.insert, {
         msg_id: message.id,
         bot: reply?.bot,
         reply: reply?._id,
         business_phone_number_id,
         conversation: reply?.conversation,
-        recipient: value.metadata.display_phone_number.toString(),
+        direction: "incoming",
         timestamp: parseInt(message.timestamp) + 5,
         interactive_reply: message.interactive,
         type: "interactive_reply", //message.type,
-      };
-
-      await ctx.runMutation(
-        internal.datatypes.interactiveReply.insert,
-        buttonReply
-      );
+      });
     }
   },
 });
 
 export const insert = internalMutation({
-  args: v.object({
-    msg_id: v.string(),
-    bot: v.optional(v.id("customerBot")),
-    business_phone_number_id: v.string(),
-    conversation: v.id("conversation"),
-    reply: v.optional(v.id("message")),
-    recipient: v.string(),
-    timestamp: v.number(),
-    type: v.string(),
-    interactive_reply: v.any(),
-  }),
+  args: {
+    ...pick(Message.withoutSystemFields, [
+      "msg_id",
+      "bot",
+      "reply",
+      "business_phone_number_id",
+      "conversation",
+      "direction",
+      "timestamp",
+      "type",
+    ]),
+    interactive_reply,
+  },
   handler: async (ctx, args) => {
     const message = await ctx.db.insert("message", args);
     // send to bot

@@ -1,6 +1,8 @@
+import { pick } from "convex-helpers";
 import { v } from "convex/values";
 import { internal } from "../_generated/api";
 import { internalAction, internalMutation } from "../_generated/server";
+import { Message, storage } from "./../tables/message";
 
 export const run = internalAction({
   args: v.object({
@@ -78,8 +80,8 @@ export const run = internalAction({
     }
     const business_phone_number_id = value.metadata.phone_number_id.toString();
     const conversation = await ctx.runMutation(
-      internal.datatypes.conversation.insert,
-      args as never
+      internal.data.conversation.insert,
+      args
     );
 
     const response = await fetch(`https://graph.facebook.com/v20.0/${id}/`, {
@@ -102,11 +104,11 @@ export const run = internalAction({
 
     const storage = await ctx.storage.store(file);
 
-    await ctx.runMutation(internal.datatypes.media.insert, {
+    await ctx.runMutation(internal.data.media.insert, {
       msg_id: message.id,
       business_phone_number_id,
       conversation,
-      recipient: value.metadata.display_phone_number.toString(),
+      direction: "incoming",
       timestamp: parseInt(message.timestamp, 10),
       storage,
       type: message.type,
@@ -116,13 +118,15 @@ export const run = internalAction({
 
 export const insert = internalMutation({
   args: {
-    business_phone_number_id: v.string(),
-    conversation: v.any(),
-    msg_id: v.string(),
-    recipient: v.string(),
-    storage: v.id("_storage"),
-    timestamp: v.number(),
-    type: v.string(),
+    ...pick(Message.withoutSystemFields, [
+      "msg_id",
+      "business_phone_number_id",
+      "conversation",
+      "timestamp",
+      "direction",
+      "type",
+    ]),
+    storage,
   },
   handler: async (ctx, args) => {
     await ctx.db.insert("message", args);

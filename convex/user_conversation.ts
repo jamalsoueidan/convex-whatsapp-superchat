@@ -1,15 +1,16 @@
 import { v } from "convex/values";
+import { internalQuery } from "./_generated/server";
 import { mutationWithUser, queryWithUser } from "./auth";
 
-export const find = queryWithUser({
+export const get = queryWithUser({
   args: {
     conversation: v.id("conversation"),
   },
-  handler: async (ctx, args) => {
-    return await ctx.db
+  handler: (ctx, args) => {
+    return ctx.db
       .query("userConversation")
-      .withIndex("by_user_and_conversation", (q) =>
-        q.eq("user", ctx.user).eq("conversation", args.conversation)
+      .withIndex("by_conversation_and_user", (q) =>
+        q.eq("conversation", args.conversation).eq("user", ctx.user)
       )
       .first();
   },
@@ -21,12 +22,7 @@ export const update = mutationWithUser({
     last_seen_at: v.number(),
   },
   handler: async (ctx, args) => {
-    const uc = await ctx.db
-      .query("userConversation")
-      .withIndex("by_user_and_conversation", (q) =>
-        q.eq("user", ctx.user).eq("conversation", args.conversation)
-      )
-      .first();
+    const uc = await get(ctx, args);
 
     if (uc) {
       await ctx.db.patch(uc._id, {
@@ -39,34 +35,31 @@ export const update = mutationWithUser({
         last_seen_at: args.last_seen_at,
       });
     }
-    return null;
   },
 });
 
-export const count = queryWithUser({
+export const countUnreadMessages = internalQuery({
   args: {
     conversation: v.id("conversation"),
+    user: v.id("users"),
   },
   handler: async (ctx, args) => {
     const uc = await ctx.db
       .query("userConversation")
-      .withIndex("by_user_and_conversation", (q) =>
-        q.eq("user", ctx.user).eq("conversation", args.conversation)
+      .withIndex("by_conversation_and_user", (q) =>
+        q.eq("conversation", args.conversation).eq("user", args.user)
       )
-      .first();
+      .unique();
 
     if (uc) {
       const messages = await ctx.db
         .query("message")
-        .withIndex("by_conversation", (q) =>
-          q.eq("conversation", args.conversation)
+        .withIndex("by_conversation_and_timestamp", (q) =>
+          q
+            .eq("conversation", args.conversation)
+            .gte("timestamp", uc.last_seen_at)
         )
-        .filter((q) =>
-          q.and(
-            q.gte(q.field("timestamp"), uc.last_seen_at),
-            q.neq(q.field("user"), ctx.user)
-          )
-        )
+        .filter((q) => q.neq(q.field("user"), args.user))
         .collect();
       return messages.length;
     }

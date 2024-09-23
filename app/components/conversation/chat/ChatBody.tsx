@@ -1,30 +1,25 @@
-import { useParams } from "@remix-run/react";
 import { api } from "convex/_generated/api";
 import { Id } from "convex/_generated/dataModel";
-import { usePaginatedQuery, useQuery } from "convex/react";
+import { usePaginatedQuery } from "convex/react";
 import { Fragment, useCallback, useEffect, useRef } from "react";
 import { useLastSeenConversation } from "~/hooks/useLastSeenConversation";
 
-import { useCountUnreadMessages } from "~/hooks/useCountUnreadMessages";
+import { useConversation } from "~/providers/ConversationProvider";
+import { useUser } from "~/providers/UserProvider";
 import { ChatEditor } from "./ChatEditor";
 import { ChatMessages } from "./ChatMessages";
 
 export function ChatBody() {
-  const user = useQuery(api.auth.currentUser);
-  const { conversationId } = useParams();
+  const user = useUser();
+  const conversation = useConversation();
   const viewport = useRef<HTMLDivElement>(null);
   const { results, status, loadMore } = usePaginatedQuery(
     api.message.paginate,
-    { conversation: conversationId as Id<"conversation"> },
+    { conversation: conversation._id },
     { initialNumItems: 15 }
   );
 
-  const unreadMessageCount = useCountUnreadMessages(
-    conversationId as Id<"conversation">
-  );
-  const [, setLastSeenAt] = useLastSeenConversation(
-    conversationId as Id<"conversation">
-  );
+  const [, setLastSeenAt] = useLastSeenConversation(conversation._id);
 
   const previousMessage = useRef<Id<"message"> | null>(null);
 
@@ -65,7 +60,7 @@ export function ChatBody() {
         messages={results}
         onTopReached={onTopReached}
         onBottomReached={onBottomReached}
-        unreadMessageCount={unreadMessageCount}
+        unreadMessageCount={conversation.unreadMessageCount}
         viewport={viewport}
       />
       <ChatEditor />

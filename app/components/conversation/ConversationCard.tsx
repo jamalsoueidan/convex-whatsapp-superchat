@@ -9,15 +9,18 @@ import {
   Text,
 } from "@mantine/core";
 import { Link } from "@remix-run/react";
-import { Doc } from "convex/_generated/dataModel";
 
 import dayjs from "dayjs";
 import isSameOrAfter from "dayjs/plugin/isSameOrAfter";
 import isSameOrBefore from "dayjs/plugin/isSameOrBefore";
 import localizedFormat from "dayjs/plugin/localizedFormat";
 import relativeTime from "dayjs/plugin/relativeTime";
-import { useCountUnreadMessages } from "~/hooks/useCountUnreadMessages";
+
+import { api } from "convex/_generated/api";
+import { FunctionReturnType } from "convex/server";
 import { useLastMessageConversation } from "~/hooks/useLastMessageConversation";
+import { useRemainingTime } from "~/hooks/useRemainingTime";
+import { ChatTimer } from "./chat/ChatTimer";
 
 dayjs.extend(relativeTime);
 dayjs.extend(localizedFormat);
@@ -28,18 +31,17 @@ export const ConversationCard = ({
   conversation,
   selected,
 }: {
-  conversation: Doc<"conversation">;
+  conversation: FunctionReturnType<typeof api.conversation.getId>;
   selected: boolean;
 }) => {
   const message = useLastMessageConversation(conversation._id);
   const receivedDate = new Date(conversation.timestamp * 1000);
-  const unreadMessageCount = useCountUnreadMessages(conversation._id);
+  const remainingDuration = useRemainingTime(conversation);
 
   return (
     <>
       <Card
         p="xs"
-        mr="xs"
         component={Link}
         to={`/conversation/${conversation._id}`}
         prefetch="intent"
@@ -50,26 +52,27 @@ export const ConversationCard = ({
           <Avatar size="lg" />
           <Flex flex={1}>
             <Stack gap="0" flex={1}>
-              <Text>{conversation.name}</Text>
+              <Text fw="500" fz="sm">
+                {conversation.name}
+              </Text>
               {message ? (
-                <Text lineClamp={1}>
+                <Text lineClamp={1} fz="sm">
                   {truncateText(
-                    message.text?.body ||
-                      message.interactive?.body?.text ||
-                      message.interactive_reply?.flow_name ||
-                      "",
+                    message.text?.body || message.interactive?.body?.text || "",
                     25 // Set the maximum length (e.g., 100 characters)
                   )}
                 </Text>
               ) : null}
+
+              <ChatTimer remainingDuration={remainingDuration} />
             </Stack>
-            <Stack align="flex-end" justify="center" gap="2px">
+            <Stack justify="space-between" gap="2px">
               <Text c="green" size="xs" fw="500">
                 {formatReceivedDate(receivedDate)}
               </Text>
-              {unreadMessageCount > 0 && (
+              {conversation.unreadMessageCount > 0 && (
                 <Badge color="green" size="md" radius="200px" p="7px">
-                  {unreadMessageCount}
+                  {conversation.unreadMessageCount}
                 </Badge>
               )}
             </Stack>

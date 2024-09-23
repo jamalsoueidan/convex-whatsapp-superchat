@@ -3,7 +3,6 @@ import { Link, useLocation } from "@remix-run/react";
 import { IconArrowLeft, IconGripVertical } from "@tabler/icons-react";
 import dayjs from "dayjs";
 import relativeTime from "dayjs/plugin/relativeTime";
-import { useMobile } from "~/hooks/useMobile";
 import { useConversation } from "~/providers/ConversationProvider";
 
 dayjs.extend(relativeTime);
@@ -12,8 +11,6 @@ export function ChatHeader() {
   const location = useLocation();
   const isMatch = location.pathname.endsWith("/settings");
   const conversation = useConversation();
-  const isMobile = useMobile();
-
   const receivedDate = dayjs(conversation.timestamp * 1000);
 
   return (
@@ -22,7 +19,7 @@ export function ChatHeader() {
       py="xs"
       h="60px"
       align="center"
-      bg={{ base: "#3a5664", md: "#f0f2f5" }}
+      bg="#3a5664"
       justify="space-between"
     >
       <Flex gap="0" align="center">
@@ -39,10 +36,10 @@ export function ChatHeader() {
         <Flex gap="xs">
           <Avatar color="white" radius="xl" bg="gray.1" size="md" />
           <Flex direction="column" gap="0">
-            <Text lh="xs" c={{ base: "white", md: "black" }}>
+            <Text lh="xs" c="white">
               {conversation.name || conversation.customer_phone_number}{" "}
             </Text>
-            <Text lh="xs" fz="xs" c={{ base: "white", md: "black" }}>
+            <Text lh="xs" fz="xs" c="white">
               last seen {receivedDate.fromNow()}
             </Text>
           </Flex>
@@ -52,7 +49,7 @@ export function ChatHeader() {
         <ActionIcon
           variant="transparent"
           aria-label="Back"
-          color={isMobile ? "white" : "#54656f"}
+          color="white"
           component={Link}
           to={
             !isMatch

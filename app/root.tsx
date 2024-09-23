@@ -20,6 +20,7 @@ import { BottomNavigation } from "./components/BottomNavigation";
 import { Navigation } from "./components/Navigation";
 import { RootWrapper } from "./components/RootWrapper";
 import { SignIn } from "./components/Signin";
+import { UserProvider } from "./providers/UserProvider";
 
 export async function loader() {
   const CONVEX_URL = process.env["CONVEX_URL"]!;
@@ -45,9 +46,11 @@ export function Layout({ children }: { children: React.ReactNode }) {
           <ConvexAuthProvider client={convex}>
             <RootWrapper>
               <Authenticated>
-                <Navigation />
-                {children}
-                <BottomNavigation />
+                <UserProvider>
+                  <Navigation />
+                  {children}
+                  <BottomNavigation />
+                </UserProvider>
               </Authenticated>
 
               <Unauthenticated>

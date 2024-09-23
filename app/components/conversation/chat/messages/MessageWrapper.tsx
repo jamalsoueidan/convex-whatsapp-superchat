@@ -1,7 +1,6 @@
 import { Avatar, Card, Flex, rem } from "@mantine/core";
 import { api } from "convex/_generated/api";
 import { UsePaginatedQueryReturnType } from "convex/react";
-import { useMessageInfo } from "~/hooks/useMessageInfo";
 
 export type MessageWrapperProps = {
   msg: UsePaginatedQueryReturnType<typeof api.message.paginate>["results"][0];
@@ -13,16 +12,15 @@ export const MessageWrapper = ({
   children,
   bg,
 }: MessageWrapperProps & { children: React.ReactNode }) => {
-  const { isRecipientDifferent } = useMessageInfo(msg);
-  const backgroundColor = isRecipientDifferent ? "white" : "#d9fdd3";
-  const justify = isRecipientDifferent ? "flex-start" : "flex-end";
+  const backgroundColor = msg.direction === "incoming" ? "white" : "#d9fdd3";
+  const justify = msg.direction === "incoming" ? "flex-start" : "flex-end";
 
   const failed = msg.statuses?.find((r) => r.status === "failed");
 
   return (
     <Flex justify={justify} align="start" mr="xs" my={rem(8)} gap="6px">
       <Card
-        bg={failed ? "red" : bg || backgroundColor}
+        bg={failed ? "red.2" : bg || backgroundColor}
         py="4px"
         px="6px"
         miw={rem(55)}
@@ -32,7 +30,7 @@ export const MessageWrapper = ({
       >
         {children}
       </Card>
-      {!isRecipientDifferent ? (
+      {msg.direction !== "incoming" ? (
         msg.user?.name ? (
           <Avatar color="cyan" radius="xl" size={rem(30)}>
             {getInitials(msg.user?.name)}

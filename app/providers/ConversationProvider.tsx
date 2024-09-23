@@ -1,8 +1,10 @@
-import { Doc } from "convex/_generated/dataModel";
+import { api } from "convex/_generated/api";
+import { FunctionReturnType } from "convex/server";
 import React, { createContext, useContext } from "react";
+import { useRemainingTime } from "~/hooks/useRemainingTime";
 
 type ConversationContextType = {
-  conversation: Doc<"conversation">;
+  conversation: FunctionReturnType<typeof api.conversation.getId>;
 };
 
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
@@ -15,12 +17,15 @@ export const useConversation = () => {
       "useConversation must be used within a ConversationProvider"
     );
   }
-  return context.conversation;
+
+  const remainingDuration = useRemainingTime(context.conversation);
+
+  return { ...context.conversation, remainingDuration };
 };
 
 export const ConversationProvider: React.FC<{
   children: React.ReactNode;
-  conversation: Doc<"conversation">;
+  conversation: FunctionReturnType<typeof api.conversation.getId>;
 }> = ({ children, conversation }) => {
   return (
     <ConversationContext.Provider value={{ conversation }}>

@@ -15,11 +15,11 @@
 
 .ProseMirror {
   padding: 8px !important;
-  border-radius: var(--mantine-spacing-xs);
-  border: 1px solid #2d9fd9;
-  background: white;
+  border: 0px;
+  //background: white;
 
   p {
+    font-size: var(--mantine-font-size-md);
     line-height: var(--mantine-spacing-lg);
     margin: 0;
     padding: 0;

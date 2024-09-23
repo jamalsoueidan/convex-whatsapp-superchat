@@ -1,6 +1,8 @@
+import { pick } from "convex-helpers";
 import { v } from "convex/values";
 import { internal } from "../_generated/api";
 import { internalAction, internalMutation } from "../_generated/server";
+import { Message, text } from "./../tables/message";
 
 export const run = internalAction({
   args: v.object({
@@ -49,7 +51,7 @@ export const run = internalAction({
   }),
   handler: async (ctx, args) => {
     const conversation = await ctx.runMutation(
-      internal.datatypes.conversation.insert,
+      internal.data.conversation.insert,
       args
     );
     const value = args.entry[0].changes[0].value;
@@ -57,20 +59,18 @@ export const run = internalAction({
       const message = value.messages[0];
       const business_phone_number_id = value.metadata.phone_number_id;
       if (conversation) {
-        const newMessage = {
+        await ctx.runMutation(internal.data.text.insert, {
           msg_id: message.id,
           business_phone_number_id,
           conversation,
-          recipient: value.metadata.display_phone_number,
+          direction: "incoming",
           timestamp: parseInt(message.timestamp, 10),
           text: {
             preview_url: true,
             body: message.text.body,
           },
           type: message.type,
-        };
-
-        await ctx.runMutation(internal.datatypes.text.insert, newMessage);
+        });
       }
     }
   },
@@ -78,16 +78,15 @@ export const run = internalAction({
 
 export const insert = internalMutation({
   args: {
-    business_phone_number_id: v.string(),
-    conversation: v.id("conversation"),
-    msg_id: v.string(),
-    recipient: v.string(),
-    text: v.object({
-      body: v.string(),
-      preview_url: v.boolean(),
-    }),
-    timestamp: v.number(),
-    type: v.string(),
+    ...pick(Message.withoutSystemFields, [
+      "msg_id",
+      "business_phone_number_id",
+      "conversation",
+      "timestamp",
+      "direction",
+      "type",
+    ]),
+    text,
   },
   handler: async (ctx, args) => {
     const message = await ctx.db.insert("message", args);

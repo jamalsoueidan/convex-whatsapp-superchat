@@ -1,4 +1,6 @@
+import { api } from "convex/_generated/api";
 import { Doc } from "convex/_generated/dataModel";
+import { useQuery } from "convex/react";
 import React, { createContext, useContext } from "react";
 
 type UserContextType = {
@@ -20,8 +22,12 @@ export const useUser = () => {
 
 export const UserProvider: React.FC<{
   children: React.ReactNode;
-  user: Doc<"users">;
-}> = ({ children, user }) => {
+}> = ({ children }) => {
+  const user = useQuery(api.auth.currentUser);
+  if (!user) {
+    return <>User is not logged in</>;
+  }
+
   return (
     <UserContext.Provider value={{ user }}>{children}</UserContext.Provider>
   );

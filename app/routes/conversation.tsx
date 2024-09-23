@@ -17,7 +17,7 @@ export default function Conversation() {
         h="100%"
         w={isMobile ? "100%" : "30%"}
         direction="column"
-        style={{ overflow: "hidden" }}
+        style={{ overflow: "hidden", borderRight: "1px solid #e9ecef" }}
       >
         {toggle === "contacts" ? <Contacts /> : <ConversationList />}
       </Flex>
