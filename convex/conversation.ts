@@ -1,22 +1,27 @@
-import { asyncMap } from "convex-helpers";
+import { asyncMap, pick } from "convex-helpers";
+import { filter } from "convex-helpers/server/filter";
 import { v } from "convex/values";
 import { internalMutation, internalQuery } from "./_generated/server";
-import { queryWithUser } from "./auth";
+import { mutationWithUser, queryWithUser } from "./auth";
+import { Conversation } from "./tables/conversation";
 import { countUnreadMessages } from "./user_conversation";
 
 export const getAll = queryWithUser({
-  handler: (ctx) => {
+  handler: async (ctx) => {
+    const timestamp = Math.floor(Date.now() / 1000) - 24 * 60;
+    console.log(timestamp);
     return asyncMap(
-      ctx.db.query("conversation").order("desc").collect(),
+      await filter(
+        ctx.db.query("conversation"),
+        (c) => timestamp > (c.incoming_timestamp || 0)
+      ).collect(),
       async (conversation) => {
-        const unreadMessageCount = await countUnreadMessages(ctx, {
-          conversation: conversation._id,
-          user: ctx.user,
-        });
-
         return {
           ...conversation,
-          unreadMessageCount,
+          unreadMessageCount: await countUnreadMessages(ctx, {
+            conversation: conversation._id,
+            user: ctx.user,
+          }),
         };
       }
     );
@@ -37,6 +42,40 @@ export const getId = queryWithUser({
         user: ctx.user,
       }),
     };
+  },
+});
+
+export const create = mutationWithUser({
+  args: {
+    ...pick(Conversation.withoutSystemFields, [
+      "name",
+      "customer_phone_number",
+      "timestamp",
+    ]),
+    conversation: v.id("conversation"), //so we know which business_phone_number_id to use
+  },
+  handler: async (ctx, args) => {
+    const conversation = await getId(ctx, args);
+
+    const existingConversation = await ctx.db
+      .query("conversation")
+      .withIndex("by_business_and_customer", (q) =>
+        q
+          .eq("business_phone_number_id", conversation.business_phone_number_id)
+          .eq("customer_phone_number", args.customer_phone_number)
+      )
+      .unique();
+
+    if (!existingConversation) {
+      await ctx.db.insert("conversation", {
+        name: args.name,
+        customer_phone_number: args.customer_phone_number,
+        business_phone_number_id: conversation.business_phone_number_id,
+        timestamp: args.timestamp,
+      });
+    } else {
+      throw new Error("Contact already exists");
+    }
   },
 });
 
