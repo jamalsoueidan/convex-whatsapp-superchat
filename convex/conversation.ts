@@ -13,7 +13,7 @@ export const getAll = queryWithUser({
     return asyncMap(
       await filter(
         ctx.db.query("conversation"),
-        (c) => timestamp > (c.incoming_timestamp || 0)
+        (c) => true //timestamp > (c.incoming_timestamp || 0)
       ).collect(),
       async (conversation) => {
         return {
