@@ -14,7 +14,7 @@ import { Link } from "@remix-run/react";
 
 import { IconArrowLeft } from "@tabler/icons-react";
 import { api } from "convex/_generated/api";
-import { Doc, Id } from "convex/_generated/dataModel";
+import { Doc } from "convex/_generated/dataModel";
 import { ReactMutation, useQuery } from "convex/react";
 import { FunctionReference } from "convex/server";
 import dayjs from "dayjs";
@@ -31,10 +31,7 @@ export const TeamUserForm = ({
     FunctionReference<
       "mutation",
       "public",
-      {
-        accessLevel: number;
-        user: Id<"users">;
-      },
+      (typeof api.users.update)["_args"],
       null,
       string | undefined
     >

@@ -159,9 +159,7 @@ export const ChatEditor = () => {
                 offLabel="Sending to customer"
                 checked={isInternal}
                 onChange={(event) => {
-                  if (conversation.remainingDuration) {
-                    setIsInternal(event.currentTarget.checked);
-                  }
+                  setIsInternal(event.currentTarget.checked);
                 }}
               />
 
